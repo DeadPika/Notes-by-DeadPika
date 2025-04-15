@@ -4,6 +4,7 @@ using Notes.Application.Common.Mapping;
 using Notes.Application.Interfaces;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Notes.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+//Вызвал Middleware, который обрабатывает исключения.
+app.UseCustomExceptionHandler();
 
 app.UseRouting();
 app.UseHttpsRedirection();
