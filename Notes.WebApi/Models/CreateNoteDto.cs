@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Notes.Application.Common.Mapping;
-using Notes.Application.Notes.Commands.CreateNote;
+using Notes.Infrastructure.Repositories.Notes.Commands.CreateNote;
 
 namespace Notes.WebApi.Models
 {

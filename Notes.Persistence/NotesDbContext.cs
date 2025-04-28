@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Application.Interfaces;
-using Notes.Domain;
+using Notes.Domain.Entities;
 using Notes.Persistence.EntityTypeConfiguration;
 
 namespace Notes.Persistence

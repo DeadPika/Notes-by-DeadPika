@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Notes.Infrastructure.Repositories.Notes.Commands.CreateNote;
+using Notes.Infrastructure.Repositories.Notes.Commands.DeleteNote;
+using Notes.Infrastructure.Repositories.Notes.Commands.UpdateNote;
+using Notes.Infrastructure.Repositories.Notes.Queries.GetNoteDetails;
+using Notes.Infrastructure.Repositories.Notes.Queries.GetNoteList;
 using Microsoft.AspNetCore.Mvc;
-using Notes.Application.Notes.Commands.CreateNote;
-using Notes.Application.Notes.Commands.DeleteNote;
-using Notes.Application.Notes.Commands.UpdateNote;
-using Notes.Application.Notes.Queries.GetNoteDetails;
-using Notes.Application.Notes.Queries.GetNoteList;
 using Notes.WebApi.Models;
 
 namespace Notes.WebApi.Controllers
