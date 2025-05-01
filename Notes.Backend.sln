@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Persistence", "Notes.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.WebApi", "Notes.WebApi\Notes.WebApi.csproj", "{374BB190-752B-427E-9110-BB2E99D23131}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Infrastructure", "Notes.Infrastructure\Notes.Infrastructure.csproj", "{7055F065-8418-42F7-A4F1-2FF1422B6785}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Infrastructure", "Notes.Infrastructure\Notes.Infrastructure.csproj", "{6C12143E-AE15-452E-B952-D3AECF462C5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,10 @@ Global
 		{374BB190-752B-427E-9110-BB2E99D23131}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{374BB190-752B-427E-9110-BB2E99D23131}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{374BB190-752B-427E-9110-BB2E99D23131}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7055F065-8418-42F7-A4F1-2FF1422B6785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7055F065-8418-42F7-A4F1-2FF1422B6785}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7055F065-8418-42F7-A4F1-2FF1422B6785}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7055F065-8418-42F7-A4F1-2FF1422B6785}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C12143E-AE15-452E-B952-D3AECF462C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C12143E-AE15-452E-B952-D3AECF462C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C12143E-AE15-452E-B952-D3AECF462C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C12143E-AE15-452E-B952-D3AECF462C5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

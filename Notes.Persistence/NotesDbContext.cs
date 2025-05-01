@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notes.Application.Interfaces;
-using Notes.Domain.Entities;
+using Notes.Domain.Models;
 using Notes.Persistence.EntityTypeConfiguration;
 
 namespace Notes.Persistence
 {
     public class NotesDbContext : DbContext, INotesDbContext
     {
-        public DbSet<Note> Notes { get; set; } 
+        public DbSet<Note> Notes { get; set; }
+        public DbSet<User> Users { get; set; }
         public NotesDbContext(DbContextOptions<NotesDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {

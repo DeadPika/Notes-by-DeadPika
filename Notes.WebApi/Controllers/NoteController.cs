@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
-using Notes.Infrastructure.Repositories.Notes.Commands.CreateNote;
-using Notes.Infrastructure.Repositories.Notes.Commands.DeleteNote;
-using Notes.Infrastructure.Repositories.Notes.Commands.UpdateNote;
-using Notes.Infrastructure.Repositories.Notes.Queries.GetNoteDetails;
-using Notes.Infrastructure.Repositories.Notes.Queries.GetNoteList;
 using Microsoft.AspNetCore.Mvc;
-using Notes.WebApi.Models;
+using Notes.Persistence.Repositories.Notes.Queries.GetNoteDetails;
+using Notes.Persistence.Repositories.Notes.Queries.GetNoteList;
+using Notes.Persistence.Repositories.Notes.Commands.CreateNote;
+using Notes.Persistence.Repositories.Notes.Commands.DeleteNote;
+using Notes.Persistence.Repositories.Notes.Commands.UpdateNote;
+using Notes.WebApi.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Notes.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class NoteController : BaseController
     {
@@ -40,7 +42,7 @@ namespace Notes.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateNoteDto createNoteDto)
         {
-            var command = _mapper.Map<CreateNoteCommand>(createNoteDto);
+            var command = _mapper.Map<CreateUserCommand>(createNoteDto);
             command.UserId = UserId;
             var noteId = await Mediator.Send(command);
             return Ok(command);

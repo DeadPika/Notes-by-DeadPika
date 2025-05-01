@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using System.Reflection;
+using Notes.Application.Interfaces;
 
 namespace Notes.Application.Common.Mapping
 {

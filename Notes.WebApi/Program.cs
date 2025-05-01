@@ -2,9 +2,14 @@ using Notes.Persistence;
 using Notes.Application;
 using Notes.Application.Common.Mapping;
 using Notes.Application.Interfaces;
+using Notes.Infrastructure;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Notes.WebApi.Middleware;
+using Notes.WebApi.Extensions;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.CookiePolicy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +22,17 @@ builder.Services.AddAutoMapper(config =>
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
+
+builder.Services.AddApiAuthentication(builder.Configuration);
 
 var cs = builder.Configuration.GetSection("DbConnection");
 
-
 builder.Services.AddDbContext<NotesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DbConnection")));
+
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddCors(options =>
 {
@@ -63,13 +72,29 @@ if (app.Environment.IsDevelopment())
 //Вызвал Middleware, который обрабатывает исключения.
 app.UseCustomExceptionHandler();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Styles")),
+    RequestPath = "/styles"
+});
+
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always
+});
+
+app.UseAuthentication();    
+app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers();
+    endpoints.MapDefaultControllerRoute();
 });
 
 app.Run();

@@ -4,13 +4,13 @@ using Notes.Domain.Models;
 
 namespace Notes.Persistence.EntityTypeConfiguration
 {
-    public class NoteConfiguration : IEntityTypeConfiguration<Note>
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<Note> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.Property(x => x.Title).HasMaxLength(250);
+            builder.Property(x => x.Name).HasMaxLength(250);
         }
     }
 }
