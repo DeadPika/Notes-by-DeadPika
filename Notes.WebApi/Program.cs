@@ -7,9 +7,10 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Notes.WebApi.Middleware;
 using Notes.WebApi.Extensions;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.CookiePolicy;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddPresentation();
 builder.Services.AddControllers();
 
 builder.Services.AddApiAuthentication(builder.Configuration);
@@ -43,6 +45,10 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin();
     });
 });
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -67,6 +73,12 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "YourSolution API V1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
 //Вызвал Middleware, который обрабатывает исключения.

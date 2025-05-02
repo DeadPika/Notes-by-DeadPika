@@ -3,22 +3,25 @@ using Notes.Domain.Models;
 
 namespace Notes.Application.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
         private readonly IUsersRepository _usersRepository;
-        public UserService(IUsersRepository usersRepository, IPasswordHasher passwordHasher, IJwtProvider jwtProvider) => 
+        public UserService(IUsersRepository usersRepository, IPasswordHasher passwordHasher, IJwtProvider jwtProvider) =>
             (_usersRepository, _passwordHasher, _jwtProvider) = (usersRepository, passwordHasher, jwtProvider);
-            
+
         public async Task Register(string userName, string password, string email)
         {
             var hashedPassword = _passwordHasher.Generate(password);
 
-            var user = new User { Id = Guid.NewGuid(), 
-                Name = userName, 
-                HashPassword = hashedPassword, 
-                Email = email };
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Name = userName,
+                HashPassword = hashedPassword,
+                Email = email
+            };
 
             await _usersRepository.Add(user);
         }

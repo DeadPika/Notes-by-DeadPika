@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Notes.Application.Interfaces;
+using Notes.Persistence.Repositories;
 
 namespace Notes.Persistence
 {
@@ -14,6 +15,7 @@ namespace Notes.Persistence
             {
                 options.UseSqlite(connectionString);
             });
+            service.AddScoped<IUsersRepository, UsersRepository>();
             service.AddScoped<INotesDbContext>(provider => provider.GetService<NotesDbContext>()!);
             return service;
         }

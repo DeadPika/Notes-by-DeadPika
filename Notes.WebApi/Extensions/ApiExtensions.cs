@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Notes.Application.Interfaces;
+using Notes.Application.Services;
 using System.Text;
 
 namespace Notes.WebApi.Extensions
@@ -32,7 +34,10 @@ namespace Notes.WebApi.Extensions
                 });
 
             services.AddAuthorization();
-
+        }
+        public static void AddPresentation(this IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

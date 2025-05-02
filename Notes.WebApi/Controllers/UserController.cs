@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Notes.Application.Interfaces;
 using Notes.Application.Services;
 using Notes.WebApi.Contracts;
 using Notes.WebApi.Models;
@@ -8,31 +9,41 @@ namespace Notes.WebApi.Controllers
     [Route("api/[controller]")]
     public class UserController : BaseController
     {
-        public static async Task<IResult> Register(RegisterUserRequest request, UserService userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService) => _userService = userService;
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterUserRequest request)
         {
-            await userService.Register(request.UserName, request.Password, request.Email); 
-            return Results.Ok();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _userService.Register(request.UserName, request.Password, request.Email); 
+            return Ok();
         }
-        [HttpGet]
-        public static async Task<IResult> Login(string returnUrl, 
-            LoginUserRequest request, 
-            UserService userService, 
+
+        [HttpGet("login")]
+        public async Task<IActionResult> Login(string returnUrl, 
+            LoginUserRequest request,
             HttpContext context)
         {
             var viewModel = new LoginViewModel
             {
                 ReturnUrl = returnUrl,
             };
-            var token = await userService.Login(request.Email, request.Password);
+            var token = await _userService.Login(request.Email, request.Password);
 
             context.Response.Cookies.Append("note-cookies", token);
 
-            return Results.Ok(viewModel);
+            return Ok(viewModel);
         }
-        [HttpPost]
-        public Task<IResult> Login(LoginViewModel viewModel)
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginViewModel viewModel)
         {
-            return Task.FromResult(Results.Ok(viewModel));
+            return Ok(viewModel);
         }
     }
 }

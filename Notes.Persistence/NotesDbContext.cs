@@ -13,6 +13,7 @@ namespace Notes.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new NoteConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
             base.OnModelCreating(builder);
         }
     }
