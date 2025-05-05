@@ -33,11 +33,18 @@ namespace Notes.WebApi.Extensions
                     };
                 });
 
-            services.AddAuthorization();
-        }
-        public static void AddPresentation(this IServiceCollection services)
-        {
-            services.AddScoped<IUserService, UserService>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy =>
+                {
+                    policy.RequireClaim("Admin", "true");
+                });
+
+                options.AddPolicy("UserPolicy", policy =>
+                {
+                    policy.Requirements.Add();
+                });
+            });
         }
     }
 }

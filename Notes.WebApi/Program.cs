@@ -11,6 +11,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.CookiePolicy;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,6 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddPresentation();
 builder.Services.AddControllers();
 
 builder.Services.AddApiAuthentication(builder.Configuration);
@@ -48,7 +48,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => { 
+    c.SwaggerDoc("v1", new OpenApiInfo {
+        Title = "Notes.WebApi", Version = "v1"
+    });
+});
 
 var app = builder.Build();
 
@@ -69,15 +73,15 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Настройка пайплайна (аналог Configure из Startup)
+// Настройка пайплайна (аналог Configure из Startup) и Swagger.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "YourSolution API V1");
-        c.RoutePrefix = "swagger";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes.WebApi");
+        c.RoutePrefix = string.Empty;
     });
 }
 

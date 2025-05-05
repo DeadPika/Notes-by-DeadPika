@@ -6,14 +6,15 @@ namespace Notes.Persistence.Entities
 {
     public class UserEntity : IMapWith<User>
     {
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
         public string UserName { get; set; } = string.Empty;
         public string HashPassword { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public ICollection<RoleEntity> Roles { get; set; } = [];
         public void Mapping(Profile profile)
         {
             profile.CreateMap<User, UserEntity>()
-                .ForMember(userEntity => userEntity.UserId,
+                .ForMember(userEntity => userEntity.Id,
                     opt => opt.MapFrom(user => user.Id))
                 .ForMember(userEntity => userEntity.UserName,
                     opt => opt.MapFrom(user => user.Name))

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Notes.WebApi.Controllers
 {
-    [Authorize]
+    [Authorize("AdminPolicy")]
     [Route("api/[controller]")]
     public class NoteController : BaseController
     {

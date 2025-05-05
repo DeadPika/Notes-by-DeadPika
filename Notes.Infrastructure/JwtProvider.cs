@@ -14,10 +14,13 @@ namespace Notes.Infrastructure
         public JwtProvider(IOptions<JwtOptions> options) => _options = options.Value;
         public string GenerateToken(User user) 
         {
-            Claim[] claims = [new("userId", user.Id.ToString())];
+            Claim[] claims = [
+                new ("userId", user.Id.ToString()),
+                new ("Admin", "true")
+            ];
 
             var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecurityKey)),
                 SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

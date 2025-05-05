@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Notes.Infrastructure
 {
-    public class JwtOptions
+    public class PermissionRequirement
     {
-        public string SecurityKey { get; set; } = string.Empty;
-        public int ExpiresHours { get; set; }
+
     }
 }
