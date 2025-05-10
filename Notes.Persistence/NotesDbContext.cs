@@ -14,15 +14,13 @@ namespace Notes.Persistence
         public DbSet<Note> Notes { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
-        public NotesDbContext(DbContextOptions<NotesDbContext> options, IOptions<AuthorizationOptions> authOptions) : base(options) { _authOptions = authOptions.Value; }
+        public NotesDbContext(DbContextOptions<NotesDbContext> options, 
+            IOptions<AuthorizationOptions> authOptions) : base(options) { _authOptions = authOptions.Value; }
+        public AuthorizationOptions AuthOptions => _authOptions;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(typeof(NotesDbContext).Assembly);
-            builder.ApplyConfiguration(new NoteConfiguration());
-            builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new RolePermissionConfiguration(_authOptions));
-            builder.ApplyConfiguration(new RoleConfiguration());
-            builder.ApplyConfiguration(new PermissionConfiguration());
             base.OnModelCreating(builder);
         }
     }

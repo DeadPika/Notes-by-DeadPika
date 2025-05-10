@@ -2,12 +2,14 @@
 {
     public class AuthorizationOptions
     {
-        public RolePermissions[] RolePermissions { get; set; } = [];
-    }
+        public string DefaultPolicy { get; set; } = string.Empty;
+        public string AdminRole { get; set; } = string.Empty;
+        public List<RolePermissionConfig> RolePermissions { get; set; } = [];
 
-    public class RolePermissions
-    {
-        public string Role { get; set; } = string.Empty;
-        public string[] Permissions { get; set; } = [];
+        public class RolePermissionConfig
+        {
+            public string Role { get; set; } = string.Empty;
+            public List<string> Permissions { get; set; } = [];
+        }
     }
 }

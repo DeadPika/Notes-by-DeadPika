@@ -8,15 +8,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Notes.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Authorization : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Name",
-                table: "Users",
-                newName: "UserName");
+            migrationBuilder.CreateTable(
+                name: "Notes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
+                    Details = table.Column<string>(type: "TEXT", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EditDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notes", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "PermissionEntity",
@@ -32,7 +43,7 @@ namespace Notes.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleEntity",
+                name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -41,7 +52,21 @@ namespace Notes.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleEntity", x => x.Id);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
+                    HashPassword = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +78,7 @@ namespace Notes.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RolePermissionEntity", x => new { x.RoleId, x.PermissionId });
+                    table.PrimaryKey("PK_RolePermissionEntity", x => new { x.PermissionId, x.RoleId });
                     table.ForeignKey(
                         name: "FK_RolePermissionEntity_PermissionEntity_PermissionId",
                         column: x => x.PermissionId,
@@ -61,9 +86,9 @@ namespace Notes.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RolePermissionEntity_RoleEntity_RoleId",
+                        name: "FK_RolePermissionEntity_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "RoleEntity",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -79,9 +104,9 @@ namespace Notes.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_UserRoleEntity", x => new { x.RoleId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_UserRoleEntity_RoleEntity_RoleId",
+                        name: "FK_UserRoleEntity_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "RoleEntity",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -104,7 +129,7 @@ namespace Notes.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "RoleEntity",
+                table: "Roles",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
@@ -113,19 +138,34 @@ namespace Notes.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RolePermissionEntity_PermissionId",
+                name: "IX_Notes_Id",
+                table: "Notes",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermissionEntity_RoleId",
                 table: "RolePermissionEntity",
-                column: "PermissionId");
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoleEntity_UserId",
                 table: "UserRoleEntity",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Id",
+                table: "Users",
+                column: "Id",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Notes");
+
             migrationBuilder.DropTable(
                 name: "RolePermissionEntity");
 
@@ -136,12 +176,10 @@ namespace Notes.Persistence.Migrations
                 name: "PermissionEntity");
 
             migrationBuilder.DropTable(
-                name: "RoleEntity");
+                name: "Roles");
 
-            migrationBuilder.RenameColumn(
-                name: "UserName",
-                table: "Users",
-                newName: "Name");
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

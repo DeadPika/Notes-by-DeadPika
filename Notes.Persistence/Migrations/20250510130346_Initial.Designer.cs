@@ -11,8 +11,8 @@ using Notes.Persistence;
 namespace Notes.Persistence.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    [Migration("20250508141414_Authorization")]
-    partial class Authorization
+    [Migration("20250510130346_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,7 +101,7 @@ namespace Notes.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoleEntity");
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -118,15 +118,15 @@ namespace Notes.Persistence.Migrations
 
             modelBuilder.Entity("Notes.Persistence.Entities.RolePermissionEntity", b =>
                 {
-                    b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("PermissionId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("RoleId", "PermissionId");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("PermissionId");
+                    b.HasKey("PermissionId", "RoleId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("RolePermissionEntity");
                 });

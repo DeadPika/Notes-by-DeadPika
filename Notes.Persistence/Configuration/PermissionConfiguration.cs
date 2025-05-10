@@ -11,13 +11,28 @@ namespace Notes.Persistence.Configuration
         {
             builder.HasKey(p => p.Id);
 
-            var permissions = Enum
-                .GetValues<Permission>()
+            var permissions = Enum.GetValues<Permission>()
                 .Select(p => new PermissionEntity
-                {
-                    Id = (int)p,
-                    Name = p.ToString()
-                });
+                    {
+                        Id = (int)p,
+                        Name = p.ToString()
+                    })
+                    .ToList();
+
+            Console.WriteLine("Permissions to seed:");
+            foreach (var permission in permissions)
+            {
+                Console.WriteLine($"Id: {permission.Id}, Name: {permission.Name}");
+            }
+
+            var duplicates = permissions.GroupBy(p => p.Id)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+            if (duplicates.Any())
+            {
+                Console.WriteLine($"Duplicate PermissionEntity Ids found: {string.Join(", ", duplicates)}");
+                throw new InvalidOperationException("Duplicate PermissionEntity Ids found.");
+            }
 
             builder.HasData(permissions);
         }
