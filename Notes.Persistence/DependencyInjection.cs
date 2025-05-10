@@ -3,21 +3,26 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Notes.Application.Interfaces;
 using Notes.Persistence.Repositories;
+using Notes.Persistence.Interfaces;
 
 namespace Notes.Persistence
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection service, IConfiguration configuration)
+        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DbConnection");
-            service.AddDbContext<NotesDbContext>(options =>
+            services.AddDbContext<NotesDbContext>(options =>
             {
                 options.UseSqlite(connectionString);
             });
-            service.AddScoped<IUsersRepository, UsersRepository>();
-            service.AddScoped<INotesDbContext>(provider => provider.GetService<NotesDbContext>()!);
-            return service;
+
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<INotesDbContext>(provider => provider.GetService<NotesDbContext>()!);
+            services.AddAutoMapper(typeof(DependencyInjection).Assembly);
+            services.Configure<AuthorizationOptions>(configuration.GetSection(nameof(AuthorizationOptions)));
+
+            return services;
         }
     }
 }

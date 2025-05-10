@@ -1,7 +1,6 @@
 using Notes.Persistence;
 using Notes.Application;
 using Notes.Application.Common.Mapping;
-using Notes.Application.Interfaces;
 using Notes.Infrastructure;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +8,8 @@ using Notes.WebApi.Middleware;
 using Notes.WebApi.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.CookiePolicy;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi.Models;
+using Notes.Persistence.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +20,12 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile(new AssemblyMappingProfile(typeof(INotesDbContext).Assembly));
 });
 
-builder.Services.AddApplication();
-builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication()
+    .AddPersistence(builder.Configuration)
+    .AddInfrastructure(builder.Configuration);
+
+builder.Services.Configure<AuthorizationOptions>(builder.Configuration.GetSection(nameof(AuthorizationOptions)));
+
 builder.Services.AddControllers();
 
 builder.Services.AddApiAuthentication(builder.Configuration);

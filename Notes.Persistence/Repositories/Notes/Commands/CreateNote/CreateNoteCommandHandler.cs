@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using Notes.Application.Interfaces;
 using Notes.Domain.Models;
+using Notes.Persistence.Interfaces;
 
 namespace Notes.Persistence.Repositories.Notes.Commands.CreateNote
 {

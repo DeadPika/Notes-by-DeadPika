@@ -5,7 +5,7 @@ using Notes.Persistence.Entities;
 
 namespace Notes.Persistence.Configuration
 {
-    public class RoleConfiguration : IEntityTypeConfiguration<RoleEntity>
+    public partial class RoleConfiguration : IEntityTypeConfiguration<RoleEntity>
     {
         public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {

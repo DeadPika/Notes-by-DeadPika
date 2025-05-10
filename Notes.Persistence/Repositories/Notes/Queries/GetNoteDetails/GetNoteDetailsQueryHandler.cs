@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Notes.Application.Common.Exceptions;
-using Notes.Application.Interfaces;
 using Notes.Domain.Models;
+using Notes.Persistence.Interfaces;
 
 namespace Notes.Persistence.Repositories.Notes.Queries.GetNoteDetails
 {

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Notes.Application.Interfaces;
 using Notes.Domain.Models;
+using Notes.Persistence.Entities;
 
 namespace Notes.Persistence.Repositories
 {
@@ -13,13 +14,7 @@ namespace Notes.Persistence.Repositories
             (_context, _mapper) = (notesDbContext, mapper);
         public async Task Add(User user)
         {
-            var userEntity = new User
-            {
-                Id = user.Id,
-                Name = user.Name,
-                HashPassword = user.HashPassword,
-                Email = user.Email,
-            };
+            var userEntity = _mapper.Map<UserEntity>(user);
             await _context.Users.AddAsync(userEntity);
             await _context.SaveChangesAsync();
         }
@@ -27,7 +22,8 @@ namespace Notes.Persistence.Repositories
         public async Task<User> GetByEmail(string email)
         {
             var userEntity = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email) ?? throw new Exception();
-            return userEntity;
+            var user = _mapper.Map<User>(userEntity);
+            return user;
         }
     }
 }

@@ -1,19 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Notes.Application.Interfaces;
+using Microsoft.Extensions.Options;
 using Notes.Domain.Models;
-using Notes.Persistence.EntityTypeConfiguration;
+using Notes.Persistence.Configuration;
+using Notes.Persistence.Entities;
+using Notes.Persistence.Interfaces;
 
 namespace Notes.Persistence
 {
-    public class NotesDbContext : DbContext, INotesDbContext
+    public class NotesDbContext
+        : DbContext, INotesDbContext
     {
+        private readonly AuthorizationOptions _authOptions;
         public DbSet<Note> Notes { get; set; }
-        public DbSet<User> Users { get; set; }
-        public NotesDbContext(DbContextOptions<NotesDbContext> options) : base(options) { }
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<RoleEntity> Roles { get; set; }
+        public NotesDbContext(DbContextOptions<NotesDbContext> options, IOptions<AuthorizationOptions> authOptions) : base(options) { _authOptions = authOptions.Value; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfigurationsFromAssembly(typeof(NotesDbContext).Assembly);
             builder.ApplyConfiguration(new NoteConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new RolePermissionConfiguration(_authOptions));
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new PermissionConfiguration());
             base.OnModelCreating(builder);
         }
     }

@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Notes.Application.Interfaces;
+using Notes.Persistence.Interfaces;
 
 namespace Notes.Persistence.Repositories.Notes.Queries.GetNoteList
 {
