@@ -40,10 +40,10 @@ namespace Notes.WebApi.Extensions
                     policy.RequireClaim("Admin", "true");
                 });
 
-                //options.AddPolicy("UserPolicy", policy =>
-                //{
-                //    policy.Requirements.Add();
-                //});
+                options.AddPolicy("UserPolicy", policy =>
+                {
+                    policy.RequireClaim("User", "false");
+                });
             });
         }
     }

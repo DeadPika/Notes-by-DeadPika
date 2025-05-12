@@ -19,8 +19,6 @@ namespace Notes.Persistence
 
                 var authOptions = Options.Create(new AuthorizationOptions
                 {
-                    DefaultPolicy = "DefaultPolicy",
-                    AdminRole = "Admin",
                     RolePermissions = new List<AuthorizationOptions.RolePermissionConfig>
                     {
                         new AuthorizationOptions.RolePermissionConfig { Role = "Admin", Permissions = new List<string> { "Create", "Read", "Update", "Delete" } },

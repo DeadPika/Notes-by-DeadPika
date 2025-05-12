@@ -1,30 +1,47 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Notes.Domain.Enums;
 using Notes.Persistence.Entities;
-using Notes.Persistence;
 
-public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissionEntity>
+namespace Notes.Persistence.Configuration
 {
-    private readonly AuthorizationOptions _authorization;
-
-    public RolePermissionConfiguration(NotesDbContext context) => _authorization = context.AuthOptions;
-
-    public void Configure(EntityTypeBuilder<RolePermissionEntity> builder)
+    public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissionEntity>
     {
-        builder.HasKey(r => new { r.RoleId, r.PermissionId });
-        builder.HasData(ParseRolePermissions());
-    }
+        private readonly AuthorizationOptions _authorization;
 
-    private RolePermissionEntity[] ParseRolePermissions()
-    {
-        return _authorization.RolePermissions
-            .SelectMany(rp => rp.Permissions
-                .Select(p => new RolePermissionEntity
-                {
-                    RoleId = (int)Enum.Parse<Role>(rp.Role),
-                    PermissionId = (int)Enum.Parse<Permission>(p)
-                }))
-            .ToArray();
+        public RolePermissionConfiguration(AuthorizationOptions authorization) => _authorization = authorization;
+
+        public void Configure(EntityTypeBuilder<RolePermissionEntity> builder)
+        {
+            builder.HasKey(r => new { r.RoleId, r.PermissionId });
+
+            builder.HasData(ParseRolePermissions());
+        }
+
+        private RolePermissionEntity[] ParseRolePermissions()
+        {
+            if (_authorization == null || _authorization.RolePermissions == null)
+            {
+                Console.WriteLine("AuthorizationOptions or RolePermissions is null.");
+                return Array.Empty<RolePermissionEntity>();
+            }
+
+            var permissions = _authorization.RolePermissions
+                .SelectMany(rp => rp.Permissions
+                    .Select(p => new RolePermissionEntity
+                    {
+                        RoleId = (int)Enum.Parse<Role>(rp.Role),
+                        PermissionId = (int)Enum.Parse<Permission>(p)
+                    }))
+                .ToArray();
+
+            Console.WriteLine("Generated RolePermissionEntities:");
+            foreach (var rp in permissions)
+            {
+                Console.WriteLine($"RoleId: {rp.RoleId}, PermissionId: {rp.PermissionId}");
+            }
+
+            return permissions;
+        }
     }
 }

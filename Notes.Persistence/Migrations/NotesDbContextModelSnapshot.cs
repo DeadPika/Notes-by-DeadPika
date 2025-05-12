@@ -115,17 +115,44 @@ namespace Notes.Persistence.Migrations
 
             modelBuilder.Entity("Notes.Persistence.Entities.RolePermissionEntity", b =>
                 {
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("PermissionId", "RoleId");
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("RoleId");
+                    b.HasKey("RoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
 
                     b.ToTable("RolePermissionEntity");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 1
+                        });
                 });
 
             modelBuilder.Entity("Notes.Persistence.Entities.UserEntity", b =>

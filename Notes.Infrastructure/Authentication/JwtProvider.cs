@@ -6,17 +6,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Notes.Infrastructure
+namespace Notes.Infrastructure.Authentication
 {
     public class JwtProvider : IJwtProvider
     {
         private readonly JwtOptions _options;
         public JwtProvider(IOptions<JwtOptions> options) => _options = options.Value;
-        public string GenerateToken(User user) 
+        public string GenerateToken(User user)
         {
-            Claim[] claims = [
-                new ("userId", user.Id.ToString()),
-                new ("Admin", "true")
+            Claim[] claims =
+            [
+                new (CustomClaims.UserId, user.Id.ToString())
             ];
 
             var signingCredentials = new SigningCredentials(

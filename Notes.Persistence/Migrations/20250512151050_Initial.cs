@@ -78,7 +78,7 @@ namespace Notes.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RolePermissionEntity", x => new { x.PermissionId, x.RoleId });
+                    table.PrimaryKey("PK_RolePermissionEntity", x => new { x.RoleId, x.PermissionId });
                     table.ForeignKey(
                         name: "FK_RolePermissionEntity_PermissionEntity_PermissionId",
                         column: x => x.PermissionId,
@@ -137,6 +137,18 @@ namespace Notes.Persistence.Migrations
                     { 2, "User" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "RolePermissionEntity",
+                columns: new[] { "PermissionId", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 1 },
+                    { 3, 1 },
+                    { 4, 1 },
+                    { 1, 2 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_Id",
                 table: "Notes",
@@ -144,9 +156,9 @@ namespace Notes.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RolePermissionEntity_RoleId",
+                name: "IX_RolePermissionEntity_PermissionId",
                 table: "RolePermissionEntity",
-                column: "RoleId");
+                column: "PermissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoleEntity_UserId",

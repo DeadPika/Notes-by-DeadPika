@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notes.Application.Interfaces;
+using Notes.Infrastructure.Authentication;
 
 namespace Notes.Infrastructure
 {

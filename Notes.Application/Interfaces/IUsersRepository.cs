@@ -1,4 +1,5 @@
-﻿using Notes.Domain.Models;
+﻿using Notes.Domain.Enums;
+using Notes.Domain.Models;
 
 namespace Notes.Application.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Notes.Application.Interfaces
     {
         Task Add(User user);
         Task<User> GetByEmail(string email);
+        Task<HashSet<Permission>> GetUserPermissions(Guid id);
     }
 }
