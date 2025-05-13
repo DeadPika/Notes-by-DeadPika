@@ -27,6 +27,11 @@ namespace Notes.WebApi.Controllers
         public async Task<IActionResult> Login(LoginUserRequest request,
             IUserService userService)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var token = await userService.Login(request.Email, request.Password);
 
             var context = HttpContext;

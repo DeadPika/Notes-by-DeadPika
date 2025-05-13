@@ -15,7 +15,7 @@ namespace Notes.Persistence.Configuration
         {
             builder.HasKey(r => new { r.RoleId, r.PermissionId });
 
-            builder.HasData(ParseRolePermissions());
+            builder.HasData(ParseRolePermissions().DistinctBy(rp => new { rp.RoleId, rp.PermissionId }).ToArray());
         }
 
         private RolePermissionEntity[] ParseRolePermissions()
@@ -42,6 +42,15 @@ namespace Notes.Persistence.Configuration
             }
 
             return permissions;
+        }
+    }
+
+    public static class EnumerableExtensions
+    {
+        public static IEnumerable<T> DistinctBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector)
+        {
+            var seenKeys = new HashSet<TKey>();
+            return source.Where(item => seenKeys.Add(keySelector(item)));
         }
     }
 }

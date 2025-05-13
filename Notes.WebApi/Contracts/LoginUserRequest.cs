@@ -3,6 +3,6 @@
 namespace Notes.WebApi.Contracts
 {
     public record LoginUserRequest(
-        [Required] string Email,
+        [Required] [EmailAddress] string Email,
         [Required] string Password);
 }

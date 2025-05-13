@@ -12,8 +12,7 @@ using Notes.Domain.Enums;
 
 namespace Notes.WebApi.Controllers
 {
-    [Authorize("AdminPolicy")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class NoteController : BaseController
     {
         private readonly IMapper _mapper;

@@ -12,6 +12,7 @@ namespace Notes.Infrastructure
         {
             services.AddScoped<IJwtProvider,  JwtProvider>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IPermissionService, PermissionService>();
 
             services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 

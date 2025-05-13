@@ -11,7 +11,7 @@ using Notes.Persistence;
 namespace Notes.Persistence.Migrations
 {
     [DbContext(typeof(NotesDbContext))]
-    [Migration("20250512151050_Initial")]
+    [Migration("20250513131111_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

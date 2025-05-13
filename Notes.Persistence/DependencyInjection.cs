@@ -17,6 +17,7 @@ namespace Notes.Persistence
                 options.UseSqlite(connectionString);
             });
 
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(NotesDbContext).Assembly));
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<INotesDbContext>(provider => provider.GetService<NotesDbContext>()!);
             services.AddAutoMapper(typeof(DependencyInjection).Assembly);
