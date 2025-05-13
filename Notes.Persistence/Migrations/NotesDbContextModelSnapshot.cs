@@ -46,7 +46,7 @@ namespace Notes.Persistence.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Notes");
+                    b.ToTable("Notes", (string)null);
                 });
 
             modelBuilder.Entity("Notes.Persistence.Entities.PermissionEntity", b =>
@@ -61,7 +61,7 @@ namespace Notes.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PermissionEntity");
+                    b.ToTable("PermissionEntity", (string)null);
 
                     b.HasData(
                         new
@@ -98,7 +98,7 @@ namespace Notes.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -125,7 +125,7 @@ namespace Notes.Persistence.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermissionEntity");
+                    b.ToTable("RolePermissionEntity", (string)null);
 
                     b.HasData(
                         new
@@ -179,7 +179,7 @@ namespace Notes.Persistence.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Notes.Persistence.Entities.UserRoleEntity", b =>
@@ -194,7 +194,7 @@ namespace Notes.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRoleEntity");
+                    b.ToTable("UserRoleEntity", (string)null);
                 });
 
             modelBuilder.Entity("Notes.Persistence.Entities.RolePermissionEntity", b =>

@@ -15,7 +15,19 @@ namespace Notes.Persistence.Repositories
             (_context, _mapper) = (notesDbContext, mapper);
         public async Task Add(User user)
         {
-            var userEntity = _mapper.Map<UserEntity>(user);
+            var roleEntity = await _context.Roles
+                .SingleOrDefaultAsync(r => r.Id == (int)Role.User)
+                ?? throw new InvalidOperationException();
+
+            var userEntity = new UserEntity
+            {
+                Id = user.Id,
+                UserName = user.Name,
+                HashPassword = user.HashPassword,
+                Email = user.Email,
+                Roles = [roleEntity]
+            };
+
             await _context.Users.AddAsync(userEntity);
             await _context.SaveChangesAsync();
         }

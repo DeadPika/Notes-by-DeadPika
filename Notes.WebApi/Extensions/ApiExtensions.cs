@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Notes.Application.Interfaces;
-using Notes.Application.Services;
+using Notes.Domain.Enums;
+using Notes.Infrastructure.Authentication;
 using System.Text;
 
 namespace Notes.WebApi.Extensions
@@ -35,16 +35,25 @@ namespace Notes.WebApi.Extensions
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdminPolicy", policy =>
+                foreach (Permission permission in Enum.GetValues(typeof(Permission)))
                 {
-                    policy.RequireClaim("Admin", "true");
-                });
-
-                options.AddPolicy("UserPolicy", policy =>
-                {
-                    policy.RequireClaim("User", "false");
-                });
+                    options.AddPolicy($"Permission_{permission}", policy =>
+                        policy.AddRequirements(new PermissionRequirement(new[] { permission })));
+                }
             });
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("AdminPolicy", policy =>
+            //    {
+            //        policy.RequireClaim("Admin", "true");
+            //    });
+
+            //    options.AddPolicy("UserPolicy", policy =>
+            //    {
+            //        policy.RequireClaim("User", "false");
+            //    });
+            //});
         }
     }
 }
