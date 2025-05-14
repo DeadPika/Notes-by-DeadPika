@@ -2,7 +2,7 @@
 
 namespace Notes.Persistence.Repositories.Notes.Commands.CreateNote
 {
-    public class CreateUserCommand : IRequest<Guid>
+    public class CreateNoteCommand : IRequest<Guid>
     {
         public Guid UserId { get; set; }
         public string Title { get; set; } = string.Empty;

@@ -2,7 +2,7 @@
 
 namespace Notes.Persistence.Repositories.Notes.Commands.CreateNote
 {
-    public class CreateNoteCommandValidator : AbstractValidator<CreateUserCommand>
+    public class CreateNoteCommandValidator : AbstractValidator<CreateNoteCommand>
     {
         public CreateNoteCommandValidator()
         {

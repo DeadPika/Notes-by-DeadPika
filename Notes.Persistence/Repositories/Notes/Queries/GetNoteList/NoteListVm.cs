@@ -4,6 +4,6 @@ namespace Notes.Persistence.Repositories.Notes.Queries.GetNoteList
 {
     public class NoteListVm
     {
-        public IList<NoteLookupDto>? Notes { get; set; }
+        public IList<NoteLookupDto> Notes { get; set; } = [];
     }
 }

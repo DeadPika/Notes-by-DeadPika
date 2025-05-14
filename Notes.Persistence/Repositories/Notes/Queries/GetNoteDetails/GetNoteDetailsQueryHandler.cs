@@ -18,7 +18,8 @@ namespace Notes.Persistence.Repositories.Notes.Queries.GetNoteDetails
         {
             var entity = await _dbContext.Notes.
                 FirstOrDefaultAsync(note =>
-                note.Id == request.Id, cancellationToken);
+                note.Id == request.Id && 
+                note.UserId == request.UserId, cancellationToken);
 
             if (entity == null || entity.Id != request.Id)
             {

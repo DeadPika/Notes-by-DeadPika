@@ -10,7 +10,7 @@ namespace Notes.WebApi.Contracts
         public string Details { get; set; } = string.Empty;
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<CreateNoteDto, CreateUserCommand>()
+            profile.CreateMap<CreateNoteDto, CreateNoteCommand>()
                 .ForMember(noteCommand => noteCommand.Title,
                     opt => opt.MapFrom(noteDto => noteDto.Title.Length))
                 .ForMember(noteCommand => noteCommand.Details,

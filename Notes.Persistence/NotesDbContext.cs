@@ -10,12 +10,15 @@ namespace Notes.Persistence
     public class NotesDbContext
         : DbContext, INotesDbContext
     {
-        private readonly AuthorizationOptions _authOptions;
+        private readonly AuthorizationOptions? _authOptions;
         public DbSet<Note> Notes { get; set; }
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public NotesDbContext(DbContextOptions<NotesDbContext> options, 
             IOptions<AuthorizationOptions> authOptions) : base(options) { _authOptions = authOptions.Value; }
+
+        // Перегрузка для тестов.
+        public NotesDbContext(DbContextOptions<NotesDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
