@@ -49,8 +49,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(c => { 
-    c.SwaggerDoc("v1", new OpenApiInfo {
+builder.Services.AddSwaggerGen(config => { 
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    config.IncludeXmlComments(xmlPath);
+    config.SwaggerDoc("v1", new OpenApiInfo {
         Title = "Notes.WebApi", Version = "v1"
     });
 });
