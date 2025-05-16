@@ -24,7 +24,7 @@ namespace Notes.Persistence
         {
             builder.ApplyConfiguration(new NoteConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new RolePermissionConfiguration(_authOptions));
+            builder.ApplyConfiguration(new RolePermissionConfiguration(_authOptions!));
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new PermissionConfiguration());
             base.OnModelCreating(builder);

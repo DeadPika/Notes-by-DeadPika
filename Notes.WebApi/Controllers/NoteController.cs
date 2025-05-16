@@ -9,11 +9,15 @@ using Notes.WebApi.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Notes.WebApi.Attributes;
 using Notes.Domain.Enums;
+using Asp.Versioning;
 
 namespace Notes.WebApi.Controllers
 {
+    //[ApiVersion("1.0")]
+    //[ApiVersion("2.0")]
+    [ApiVersionNeutral]
     [Produces("application/json")]
-    [Route("api/[controller]/[action]")]
+    [Route("api/{version:apiVersion}/[controller]/[action]")]
     public class NoteController : BaseController
     {
         private readonly IMapper _mapper;

@@ -10,6 +10,11 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.OpenApi.Models;
 using Notes.Persistence.Interfaces;
+using Asp.Versioning;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Notes.WebApi;
+using Asp.Versioning.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,14 +54,24 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(config => { 
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    config.IncludeXmlComments(xmlPath);
-    config.SwaggerDoc("v1", new OpenApiInfo {
-        Title = "Notes.WebApi", Version = "v1"
-    });
-});
+//builder.Services.AddSwaggerGen(config =>
+//{
+//    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+//    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+//    config.IncludeXmlComments(xmlPath);
+//    config.SwaggerDoc("v1", new OpenApiInfo
+//    {
+//        Title = "Notes.WebApi",
+//        Version = "v1"
+//    });
+//});
+
+// Регистрируем Asp.Versioning.Mvc
+builder.Services.AddApiVersioning()
+    .AddApiExplorer(options =>
+    options.GroupNameFormat = "'v'VVV");
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -77,15 +92,22 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
 // Настройка пайплайна (аналог Configure из Startup) и Swagger.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    app.UseSwagger(); 
+    app.UseSwaggerUI(config =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes.WebApi");
-        c.RoutePrefix = string.Empty;
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            config.SwaggerEndpoint(
+                $"/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant());
+            config.RoutePrefix = string.Empty;
+        }
     });
 }
 
@@ -117,4 +139,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapDefaultControllerRoute();
 });
 
-app.Run();
+app.Run();;
