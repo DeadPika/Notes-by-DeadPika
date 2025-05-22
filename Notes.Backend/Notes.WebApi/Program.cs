@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Notes.WebApi;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,20 @@ builder.Services.AddApplication()
 
 builder.Services.Configure<AuthorizationOptions>(builder.Configuration.GetSection(nameof(AuthorizationOptions)));
 
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(e => e.Value?.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
+            );
+        return new BadRequestObjectResult(new { errors });
+    };
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddApiAuthentication(builder.Configuration);
@@ -41,6 +56,11 @@ builder.Services.AddDbContext<NotesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DbConnection")));
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
 
 builder.Services.AddCors(options =>
 {
@@ -67,9 +87,17 @@ builder.Services.AddEndpointsApiExplorer();
 //});
 
 // Регистрируем Asp.Versioning.Mvc
-builder.Services.AddApiVersioning()
-    .AddApiExplorer(options =>
-    options.GroupNameFormat = "'v'VVV");
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddSwaggerGen();
 

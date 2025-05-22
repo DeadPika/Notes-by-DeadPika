@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using Notes.Application.Interfaces;
 using Notes.Application.Services;
 using Notes.WebApi.Contracts;
@@ -10,40 +11,49 @@ namespace Notes.WebApi.Controllers
     public class UserController : BaseController
     {
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUserRequest request,
-            IUserService userService)
+        public async Task<IActionResult> Register(RegisterUserRequest request, IUserService userService)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new
+                {
+                    Errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList()
+                });
             }
 
-            await userService.Register(request.UserName, request.Password, request.Email); 
-
-            return Ok();
+            try
+            {
+                await userService.Register(request.UserName, request.Password, request.Email);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = "Ошибка регистрации", Details = ex.Message });
+            }
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUserRequest request,
-            IUserService userService)
+        public async Task<IActionResult> Login(LoginUserRequest request, IUserService userService)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var token = await userService.Login(request.Email, request.Password);
-
-            var context = HttpContext;
-            context.Response.Cookies.Append("note-cookies", token);
-
-            return Ok();
+            try
+            {
+                var token = await userService.Login(request.Email, request.Password);
+                var context = HttpContext;
+                context.Response.Cookies.Append("note-cookies", token);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Ошибка входа: {ex}" });
+            }
         }
-
-        //[HttpPost("login")]
-        //public IActionResult Login(LoginViewModel viewModel)
-        //{
-        //    return Ok(viewModel);
-        //}
     }
 }
