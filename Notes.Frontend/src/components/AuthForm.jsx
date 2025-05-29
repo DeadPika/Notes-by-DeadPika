@@ -1,70 +1,86 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
-const AuthForm = ({ type = 'login' }) => {
+const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isLogin = location.pathname === '/login';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (type === 'login') {
-        await signIn(email, password);
-        navigate('/notes');
+      if (isLogin) {
+        if (!email || !password) {
+          alert('Заполните email и пароль');
+          return;
+        }
+        const token = await signIn(email, password); // token определяется здесь
+        console.log('Login token:', token); // Лог для отладки
+        if (token) {
+          navigate('/notes');
+        } else {
+          alert('Токен не получен');
+        }
       } else {
+        if (!username || !email || !password) {
+          alert('Заполните все поля');
+          return;
+        }
         await signUp(username, password, email);
         navigate('/login');
       }
     } catch (error) {
-      alert(error.response?.data?.message || error.message || 'Ошибка авторизации');
+      console.error('Login/Register error:', error); // Лог ошибок
+      alert(error.response?.data?.message || error.message || 'Ошибка');
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-white rounded shadow mt-10">
-      <h2 className="text-2xl font-bold mb-4">{type === 'login' ? 'Вход' : 'Регистрация'}</h2>
-      <form onSubmit={handleSubmit}>
-        {type === 'register' && (
-          <div className="mb-4">
-            <label className="block text-gray-700">Имя пользователя</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-        )}
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded">
+      {!isLogin && (
         <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
+          <label className="block text-gray-700">Имя пользователя</label>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full p-2 border rounded"
-            required
+            placeholder="Введите имя пользователя"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Пароль</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          {type === 'login' ? 'Войти' : 'Зарегистрироваться'}
-        </button>
-      </form>
-    </div>
+      )}
+      <div className="mb-4">
+        <label className="block text-gray-700">Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border rounded"
+          placeholder="Введите email"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700">Пароль</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 border rounded"
+          placeholder="Введите пароль"
+        />
+      </div>
+      <button
+        type="submit"
+        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+      >
+        {isLogin ? 'Войти' : 'Зарегистрироваться'}
+      </button>
+    </form>
   );
 };
 

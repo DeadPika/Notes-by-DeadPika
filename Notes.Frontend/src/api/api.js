@@ -2,16 +2,18 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:5269/api', // Укажи URL твоего API
+  withCredentials: true
 });
 
 export const register = async (username, password, email) => {
-  const response = await api.post('/User/register', { UserName: username, Password: password, Email: email });
+  const response = await api.post('/v1/User/register', { UserName: username, Password: password, Email: email });
   return response.data;
 };
 
 export const login = async (email, password) => {
-  const response = await api.post('/User/login', { Email: email, Password: password });
-  return response.data;
+  const response = await api.post('/v1/User/login', { Email: email, Password: password });
+  // console.log('Token from headers:', token);
+  return response;
 };
 
 export const getNotes = async (version = 'v1') => {

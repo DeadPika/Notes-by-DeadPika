@@ -17,7 +17,7 @@ namespace Notes.WebApi.Controllers
     //[ApiVersion("2.0")]
     [ApiVersionNeutral]
     [Produces("application/json")]
-    [Route("api/{version:apiVersion}/[controller]/[action]")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     public class NoteController : BaseController
     {
         private readonly IMapper _mapper;

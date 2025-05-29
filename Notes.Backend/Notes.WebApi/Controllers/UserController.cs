@@ -7,7 +7,9 @@ using Notes.WebApi.Models;
 
 namespace Notes.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class UserController : BaseController
     {
         [HttpPost("register")]
@@ -46,8 +48,19 @@ namespace Notes.WebApi.Controllers
             try
             {
                 var token = await userService.Login(request.Email, request.Password);
-                var context = HttpContext;
-                context.Response.Cookies.Append("note-cookies", token);
+                if (string.IsNullOrEmpty(token))
+                {
+                    return BadRequest(new { message = "Токен не сгенерирован" });
+                }
+                //var context = HttpContext;
+                HttpContext.Response.Cookies.Append("note-cookies", token, new CookieOptions
+                {
+                    HttpOnly = false, // Доступно для JavaScript
+                    SameSite = SameSiteMode.Lax,
+                    Secure = false, // Для localhost
+                    Path = "/",
+                    Domain = "localhost"
+                });
                 return Ok();
             }
             catch (Exception ex)

@@ -64,13 +64,24 @@ builder.Services.AddControllers()
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFrontend", builder =>
     {
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowAnyOrigin();
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
     });
 });
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAll", policy =>
+//    {
+//        policy.AllowAnyHeader();
+//        policy.AllowAnyMethod();
+//        policy.AllowAnyOrigin();
+//    });
+//});
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -85,6 +96,7 @@ builder.Services.AddEndpointsApiExplorer();
 //        Version = "v1"
 //    });
 //});
+
 
 // Регистрируем Asp.Versioning.Mvc
 builder.Services.AddApiVersioning(options =>
@@ -150,14 +162,15 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseRouting();
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
+//app.UseCors("AllowAll");
 
-app.UseCookiePolicy(new CookiePolicyOptions
-{
-    MinimumSameSitePolicy = SameSiteMode.Strict,
-    HttpOnly = HttpOnlyPolicy.Always,
-    Secure = CookieSecurePolicy.Always
-});
+//app.UseCookiePolicy(new CookiePolicyOptions
+//{
+//    MinimumSameSitePolicy = SameSiteMode.Strict,
+//    HttpOnly = HttpOnlyPolicy.Always,
+//    Secure = CookieSecurePolicy.Always
+//});
 
 app.UseAuthentication();    
 app.UseAuthorization();
