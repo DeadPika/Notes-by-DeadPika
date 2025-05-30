@@ -97,7 +97,7 @@ namespace Notes.WebApi.Controllers
             var command = _mapper.Map<CreateNoteCommand>(createNoteDto);
             command.UserId = UserId;
             var noteId = await Mediator.Send(command);
-            return Ok(command);
+            return Ok(command); 
         }
 
         /// <summary>

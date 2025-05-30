@@ -1,7 +1,7 @@
 ﻿namespace Notes.Infrastructure.Authentication
 {
-    internal class CustomClaims
+    public class CustomClaims
     {
-        internal const string UserId = "UserId";
+        public const string UserId = "UserId";
     }
 }
