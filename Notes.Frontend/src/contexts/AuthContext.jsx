@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { login, register } from '../api/api';
 
 const AuthContext = createContext();
@@ -6,19 +6,30 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState('');
 
+  useEffect(() => {
+    const rawCookies = document.cookie;
+    console.log('Raw cookies:', rawCookies); // Лог всех куки
+    const savedToken = rawCookies
+      .split('; ')
+      .find(row => row.startsWith('note-cookies='))
+      ?.split('=')[1] || '';
+    console.log('Extracted token from cookies:', savedToken); // Лог токена
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
+
   const signIn = async (email, password) => {
     try {
       await login(email, password);
-      await new Promise(resolve => setTimeout(resolve, 200)); // Задержка для синхронизации
+      await new Promise(resolve => setTimeout(resolve, 200));
       const rawCookies = document.cookie;
-      console.log('Raw document.cookie:', rawCookies); // Лог для отладки
-      const extractedToken = rawCookies // Переименовали, чтобы избежать конфликта
+      const extractedToken = rawCookies
         .split('; ')
         .find(row => row.startsWith('note-cookies='))
         ?.split('=')[1] || '';
-      console.log('Extracted token:', extractedToken); // Лог для отладки
       setToken(extractedToken);
-      return extractedToken; // Убедимся, что возвращаем токен
+      return extractedToken;
     } catch (error) {
       console.error('SignIn error:', error);
       throw error;
