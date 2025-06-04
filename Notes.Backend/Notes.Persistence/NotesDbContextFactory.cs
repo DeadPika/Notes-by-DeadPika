@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Notes.Persistence;
 
@@ -12,7 +13,8 @@ namespace Notes.Persistence
             try
             {
                 var optionsBuilder = new DbContextOptionsBuilder<NotesDbContext>();
-                optionsBuilder.UseSqlite("Data Source=notes.db")
+                optionsBuilder.UseNpgsql("User Id=postgres.uufuatmwwtjyteiqdzui;Password=WW2BJDbcRUbOWyC5;Server=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Database=postgres",
+                    npgsqlOptions => npgsqlOptions.EnableRetryOnFailure())
                               .EnableSensitiveDataLogging();
 
                 Console.WriteLine("DbContext options configured successfully.");

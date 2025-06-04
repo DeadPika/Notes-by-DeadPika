@@ -11,10 +11,11 @@ namespace Notes.Persistence
     {
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DbConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<NotesDbContext>(options =>
             {
-                options.UseSqlite(connectionString);
+                options.UseNpgsql(connectionString,
+                    npgsqlOptions => npgsqlOptions.EnableRetryOnFailure());
             });
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(NotesDbContext).Assembly));

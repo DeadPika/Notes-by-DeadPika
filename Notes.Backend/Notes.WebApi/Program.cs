@@ -50,10 +50,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddApiAuthentication(builder.Configuration);
 
-var cs = builder.Configuration.GetSection("DbConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<NotesDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DbConnection")));
+//builder.Services.AddDbContext<NotesDbContext>(options =>
+//    options.UseNpgsql(connectionString));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers()

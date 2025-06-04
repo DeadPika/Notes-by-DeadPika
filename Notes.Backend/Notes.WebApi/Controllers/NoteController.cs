@@ -94,10 +94,18 @@ namespace Notes.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateNoteDto createNoteDto)
         {
-            var command = _mapper.Map<CreateNoteCommand>(createNoteDto);
-            command.UserId = UserId;
-            var noteId = await Mediator.Send(command);
-            return Ok(command); 
+            try
+            {
+                var command = _mapper.Map<CreateNoteCommand>(createNoteDto);
+                command.UserId = UserId;
+                var noteId = await Mediator.Send(command);
+                return Ok(noteId); // Исправлено: возвращаем noteId
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating note: {ex.Message} - Inner: {ex.InnerException?.Message}");
+                return StatusCode(500, $"An error occurred: {ex.Message} - Inner: {ex.InnerException?.Message}");
+            }
         }
 
         /// <summary>
