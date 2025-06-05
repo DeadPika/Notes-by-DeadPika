@@ -11,6 +11,7 @@ namespace Notes.Persistence.Configuration
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Id).IsUnique();
             builder.Property(x => x.Title).HasMaxLength(250);
+            builder.Property(x => x.CreationDate);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Notes.Persistence.Repositories.Notes.Commands.CreateNote
                 Title = request.Title,
                 Details = request.Details,
                 Id = Guid.NewGuid(),
-                CreationDate = DateTime.Now,
+                CreationDate = DateTime.UtcNow,
                 EditDate = null
             };
             await _dbContext.Notes.AddAsync(note, cancelletionToken);
