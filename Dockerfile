@@ -2,8 +2,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
-# Копируем проект бэкенда
-COPY Notes.Backend/Notes.WebApi/Notes.WebApi.csproj Notes.Backend/
+# Копируем файл проекта бэкенда
+COPY Notes.Backend/Notes.WebApi/Notes.WebApi.csproj Notes.Backend/Notes.WebApi/
 RUN dotnet restore Notes.Backend/Notes.WebApi/Notes.WebApi.csproj
 
 # Копируем остальной код
