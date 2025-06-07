@@ -3,12 +3,12 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
 # Копируем проект бэкенда
-COPY Notes.Backend/Notes.WebApi.csproj Notes.Backend/
-RUN dotnet restore Notes.Backend/Notes.WebApi.csproj
+COPY Notes.Backend/Notes.WebApi/Notes.WebApi.csproj Notes.Backend/
+RUN dotnet restore Notes.Backend/Notes.WebApi/Notes.WebApi.csproj
 
 # Копируем остальной код
 COPY . .
-RUN dotnet publish Notes.Backend/Notes.WebApi.csproj -c Release -o out
+RUN dotnet publish Notes.Backend/Notes.WebApi/Notes.WebApi.csproj -c Release -o out
 
 # Используем runtime-образ
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
