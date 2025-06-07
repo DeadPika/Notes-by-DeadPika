@@ -175,6 +175,8 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();    
 app.UseAuthorization();
 
+app.MapGet("/", () => "OK");
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapDefaultControllerRoute();
