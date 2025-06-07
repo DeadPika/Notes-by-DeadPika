@@ -24,7 +24,7 @@ namespace Notes.Persistence.Repositories.Notes.Commands.UpdateNote
 
             entity.Details = request.Details;
             entity.Title = request.Title;
-            entity.EditDate = DateTime.Now;
+            entity.EditDate = DateTime.UtcNow;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
