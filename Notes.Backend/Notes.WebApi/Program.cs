@@ -73,15 +73,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAll", policy =>
-//    {
-//        policy.AllowAnyHeader();
-//        policy.AllowAnyMethod();
-//        policy.AllowAnyOrigin();
-//    });
-//});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 

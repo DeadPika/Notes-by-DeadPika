@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5269/api', // Укажи URL твоего API
+  baseURL: 'https://notes-4g7h.onrender.com/api', // Укажи URL твоего API
   withCredentials: true
 });
 
