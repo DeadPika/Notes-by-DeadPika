@@ -1,82 +1,71 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { login } from '../api/api'; // Импортируем для проверки
+import { createContext, useContext, useState, useEffect } from 'react';
+import { login, register } from '../api/api';
 
-const AuthForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const { signIn } = useAuth(); // Используем signIn из AuthContext
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isLogin = location.pathname === '/login';
+const AuthContext = createContext();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    const rawCookies = document.cookie;
+    console.log('Raw cookies:', rawCookies);
+    const savedToken = rawCookies
+      .split('; ')
+      .find(row => row.startsWith('note-cookies='))
+      ?.split('=')[1] || '';
+    console.log('Extracted token from cookies:', savedToken);
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
+
+  const signIn = async (email, password) => {
     try {
-      let result;
-      if (isLogin) {
-        result = await signIn(email, password); // Вызываем signIn из AuthContext
-      } else {
-        result = await login(email, password); // Для регистрации можно использовать напрямую
-        // Или адаптировать под register из AuthContext, если нужно
+      const data = await login(email, password);
+      console.log('Login response data:', data);
+      let extractedToken = data.token || data.access_token;
+      if (!extractedToken) {
+        const rawCookies = document.cookie;
+        extractedToken = rawCookies
+          .split('; ')
+          .find(row => row.startsWith('note-cookies='))
+          ?.split('=')[1] || '';
       }
-      console.log('Auth response:', result);
-      if (result && result.token) {
-        console.log('Token received:', result.token);
-        navigate('/notes'); // Перенаправление после успеха
-      } else {
-        throw new Error('Токен не получен');
-      }
+      if (!extractedToken) throw new Error('Токен не получен');
+      setToken(extractedToken);
+      return extractedToken;
     } catch (error) {
-      console.error('Auth error:', error.message);
-      // Отображение ошибки пользователю (например, alert или состояние)
+      console.error('SignIn error:', error);
+      throw error;
     }
   };
 
+  const signUp = async (username, password, email) => {
+    try {
+      const data = await register(username, password, email);
+      console.log('Register response:', data);
+    } catch (error) {
+      console.error('SignUp error:', error);
+      throw error;
+    }
+  };
+
+  const signOut = () => {
+    setToken('');
+    document.cookie = 'note-cookies=; Max-Age=0; path=/';
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded">
-      {!isLogin && (
-        <div className="mb-4">
-          <label className="block text-gray-700">Имя пользователя</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Введите имя пользователя"
-          />
-        </div>
-      )}
-      <div className="mb-4">
-        <label className="block text-gray-700">Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded"
-          placeholder="Введите email"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700">Пароль</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded"
-          placeholder="Введите пароль"
-        />
-      </div>
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-      >
-        {isLogin ? 'Войти' : 'Зарегистрироваться'}
-      </button>
-    </form>
+    <AuthContext.Provider value={{ token, signIn, signUp, signOut }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
-export default AuthForm;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
