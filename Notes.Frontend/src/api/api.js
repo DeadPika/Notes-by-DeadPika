@@ -12,8 +12,9 @@ export const register = async (username, password, email) => {
 
 export const login = async (email, password) => {
   const response = await api.post('/v1/User/login', { Email: email, Password: password });
-  // console.log('Token from headers:', token);
-  return response;
+  console.log('Login response:', response.data); // Отладка
+  console.log('Login headers:', response.headers); // Отладка заголовков
+  return response.data; // Возвращаем данные, где должен быть токен
 };
 
 export const getNotes = async (version = 'v1') => {

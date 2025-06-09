@@ -8,12 +8,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const rawCookies = document.cookie;
-    console.log('Raw cookies:', rawCookies); // Лог всех куки
+    console.log('Raw cookies:', rawCookies);
     const savedToken = rawCookies
       .split('; ')
       .find(row => row.startsWith('note-cookies='))
       ?.split('=')[1] || '';
-    console.log('Extracted token from cookies:', savedToken); // Лог токена
+    console.log('Extracted token from cookies:', savedToken);
     if (savedToken) {
       setToken(savedToken);
     }
@@ -21,13 +21,18 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      await login(email, password);
-      await new Promise(resolve => setTimeout(resolve, 200));
-      const rawCookies = document.cookie;
-      const extractedToken = rawCookies
-        .split('; ')
-        .find(row => row.startsWith('note-cookies='))
-        ?.split('=')[1] || '';
+      const data = await login(email, password); // Получаем данные ответа
+      console.log('Login response data:', data); // Лог для отладки
+      let extractedToken = data.token || data.access_token; // Адаптируй под структуру ответа
+      if (!extractedToken) {
+        // Проверяем куки, если токен не в ответе
+        const rawCookies = document.cookie;
+        extractedToken = rawCookies
+          .split('; ')
+          .find(row => row.startsWith('note-cookies='))
+          ?.split('=')[1] || '';
+      }
+      if (!extractedToken) throw new Error('Токен не получен');
       setToken(extractedToken);
       return extractedToken;
     } catch (error) {
@@ -38,7 +43,8 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (username, password, email) => {
     try {
-      await register(username, password, email);
+      const data = await register(username, password, email);
+      console.log('Register response:', data);
     } catch (error) {
       console.error('SignUp error:', error);
       throw error;

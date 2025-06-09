@@ -12,33 +12,29 @@ const AuthForm = () => {
   const isLogin = location.pathname === '/login';
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (isLogin) {
-        if (!email || !password) {
-          alert('Заполните email и пароль');
-          return;
-        }
-        const token = await signIn(email, password); // token определяется здесь
-        console.log('Login token:', token); // Лог для отладки
-        if (token) {
-          navigate('/notes');
-        } else {
-          alert('Токен не получен');
-        }
-      } else {
-        if (!username || !email || !password) {
-          alert('Заполните все поля');
-          return;
-        }
-        await signUp(username, password, email);
-        navigate('/login');
-      }
-    } catch (error) {
-      console.error('Login/Register error:', error); // Лог ошибок
-      alert(error.response?.data?.message || error.message || 'Ошибка');
+  e.preventDefault();
+  try {
+    const response = await fetch(`${API_URL}/User/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!response.ok) throw new Error('Login failed');
+    const data = await response.json();
+    console.log('Response:', data); // Добавь для отладки
+    if (data.token) {
+      // Сохраняем токен
+      localStorage.setItem('token', data.token);
+      // Обновляем AuthContext
+      login(data.token); // Предполагается, что login доступен из useAuth
+    } else {
+      throw new Error('Токен не получен');
     }
-  };
+  } catch (error) {
+    console.error('Login error:', error);
+    // Отображение ошибки пользователю
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded">
