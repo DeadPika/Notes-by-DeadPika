@@ -1,40 +1,39 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { login } from '../api/api'; // Импортируем для проверки
 
 const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const { signIn, signUp } = useAuth();
+  const { signIn } = useAuth(); // Используем signIn из AuthContext
   const navigate = useNavigate();
   const location = useLocation();
   const isLogin = location.pathname === '/login';
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await fetch(`${API_URL}/User/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!response.ok) throw new Error('Login failed');
-    const data = await response.json();
-    console.log('Response:', data); // Добавь для отладки
-    if (data.token) {
-      // Сохраняем токен
-      localStorage.setItem('token', data.token);
-      // Обновляем AuthContext
-      login(data.token); // Предполагается, что login доступен из useAuth
-    } else {
-      throw new Error('Токен не получен');
+    e.preventDefault();
+    try {
+      let result;
+      if (isLogin) {
+        result = await signIn(email, password); // Вызываем signIn из AuthContext
+      } else {
+        result = await login(email, password); // Для регистрации можно использовать напрямую
+        // Или адаптировать под register из AuthContext, если нужно
+      }
+      console.log('Auth response:', result);
+      if (result && result.token) {
+        console.log('Token received:', result.token);
+        navigate('/notes'); // Перенаправление после успеха
+      } else {
+        throw new Error('Токен не получен');
+      }
+    } catch (error) {
+      console.error('Auth error:', error.message);
+      // Отображение ошибки пользователю (например, alert или состояние)
     }
-  } catch (error) {
-    console.error('Login error:', error);
-    // Отображение ошибки пользователю
-  }
-};
+  };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded">
