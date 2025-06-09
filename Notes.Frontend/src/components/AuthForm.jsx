@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { login } from '../api/api'; // Импортируем для проверки
 
 const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const { signIn } = useAuth(); // Используем signIn из AuthContext
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const isLogin = location.pathname === '/login';
@@ -17,21 +16,21 @@ const AuthForm = () => {
     try {
       let result;
       if (isLogin) {
-        result = await signIn(email, password); // Вызываем signIn из AuthContext
+        result = await signIn(email, password);
+        if (result) {
+          console.log('Login successful, token:', result);
+          navigate('/notes'); // Перенаправление на страницу заметок
+        }
       } else {
-        result = await login(email, password); // Для регистрации можно использовать напрямую
-        // Или адаптировать под register из AuthContext, если нужно
-      }
-      console.log('Auth response:', result);
-      if (result && result.token) {
-        console.log('Token received:', result.token);
-        navigate('/notes'); // Перенаправление после успеха
-      } else {
-        throw new Error('Токен не получен');
+        result = await signUp(username, password, email);
+        if (result) {
+          console.log('Registration successful');
+          navigate('/login'); // Перенаправление на логин после регистрации
+        }
       }
     } catch (error) {
       console.error('Auth error:', error.message);
-      // Отображение ошибки пользователю (например, alert или состояние)
+      // Отображение ошибки пользователю (например, alert)
     }
   };
 

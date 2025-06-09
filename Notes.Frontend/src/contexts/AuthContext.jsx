@@ -21,16 +21,13 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      const data = await login(email, password);
-      console.log('Login response data:', data);
-      let extractedToken = data.token || data.access_token;
-      if (!extractedToken) {
-        const rawCookies = document.cookie;
-        extractedToken = rawCookies
-          .split('; ')
-          .find(row => row.startsWith('note-cookies='))
-          ?.split('=')[1] || '';
-      }
+      await login(email, password); // Выполняем запрос, токен приходит в куке
+      const rawCookies = document.cookie;
+      const extractedToken = rawCookies
+        .split('; ')
+        .find(row => row.startsWith('note-cookies='))
+        ?.split('=')[1] || '';
+      console.log('Extracted token after login:', extractedToken);
       if (!extractedToken) throw new Error('Токен не получен');
       setToken(extractedToken);
       return extractedToken;

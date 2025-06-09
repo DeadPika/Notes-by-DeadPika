@@ -12,9 +12,9 @@ export const register = async (username, password, email) => {
 
 export const login = async (email, password) => {
   const response = await api.post('/v1/User/login', { Email: email, Password: password });
-  console.log('Login response:', response.data); // Отладка
-  console.log('Login headers:', response.headers); // Отладка заголовков
-  return response.data; // Возвращаем данные, где должен быть токен
+  console.log('Login response:', response.data);
+  console.log('Login headers:', response.headers);
+  return response.data; // Хотя токен в куке, оставим для совместимости
 };
 
 export const getNotes = async (version = 'v1') => {
