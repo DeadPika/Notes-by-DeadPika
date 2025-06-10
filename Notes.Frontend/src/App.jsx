@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import NotesPage from './pages/NotesPage';
 import NotePage from './pages/NotePage';
 import Navbar from './components/Navbar';
+import AuthForm from './components/AuthForm';
 
 // Компонент PrivateRoute
 const PrivateRoute = ({ children }) => {

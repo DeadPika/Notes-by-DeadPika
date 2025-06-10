@@ -29,11 +29,11 @@ export const AuthProvider = ({ children }) => {
         .find(row => row.startsWith('note-cookies='))
         ?.split('=')[1] || '';
       console.log('Extracted token after login:', extractedToken);
-      if (!extractedToken || extractedToken.trim() === '') {
-        throw new Error('Токен не получен или пустой');
+      if (extractedToken && extractedToken.trim() !== '') {
+        setToken(extractedToken);
+        return extractedToken; // Возвращаем токен как успех
       }
-      setToken(extractedToken);
-      return extractedToken;
+      throw new Error('Токен не получен или пустой');
     } catch (error) {
       console.error('SignIn error:', error);
       throw error;
@@ -42,8 +42,10 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (username, password, email) => {
     try {
-      const data = await register(username, password, email);
-      console.log('Register response:', data);
+      const result = await register(username, password, email);
+      console.log('Register result:', result);
+      // После регистрации можем сразу перенаправить на логин, если нужно
+      return { success: true }; // Указываем успех
     } catch (error) {
       console.error('SignUp error:', error);
       throw error;
