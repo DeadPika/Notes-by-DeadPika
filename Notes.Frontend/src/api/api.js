@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://notes-4g7h.onrender.com/api', // Укажи URL твоего API
-  withCredentials: true
+  baseURL: 'https://notes-4g7h.onrender.com/api',
+  withCredentials: true,
 });
 
 export const register = async (username, password, email) => {
@@ -11,10 +11,19 @@ export const register = async (username, password, email) => {
 };
 
 export const login = async (email, password) => {
-  const response = await api.post('/v1/User/login', { Email: email, Password: password });
-  console.log('Login response:', response.data);
-  console.log('Login headers:', response.headers);
-  return response.data; // Хотя токен в куке, оставим для совместимости
+  try {
+    const response = await api.post('/v1/User/login', { Email: email, Password: password });
+    console.log('Login response:', response);
+    console.log('Login headers:', response.headers);
+    if (response.status === 200) {
+      return { success: true }; // Указываем успех, токен в куке
+    } else {
+      throw new Error('Login failed with status: ' + response.status);
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
 };
 
 export const getNotes = async (version = 'v1') => {

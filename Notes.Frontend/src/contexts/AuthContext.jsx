@@ -21,9 +21,8 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      const response = await login(email, password); // Выполняем запрос
-      console.log('Login response:', response);
-      console.log('Login headers:', response.headers);
+      const result = await login(email, password);
+      console.log('Login result:', result);
       const rawCookies = document.cookie;
       const extractedToken = rawCookies
         .split('; ')

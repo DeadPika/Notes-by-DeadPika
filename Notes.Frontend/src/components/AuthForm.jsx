@@ -30,7 +30,7 @@ const AuthForm = () => {
       }
     } catch (error) {
       console.error('Auth error:', error.message);
-      // Отображение ошибки пользователю (например, alert)
+      // Можно добавить отображение ошибки пользователю
     }
   };
 

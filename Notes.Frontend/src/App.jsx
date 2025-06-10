@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -10,27 +10,14 @@ import Navbar from './components/Navbar';
 // Компонент PrivateRoute
 const PrivateRoute = ({ children }) => {
   const { token } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
-
-  useEffect(() => {
-    // Проверка токена
-    setIsLoading(false);
-  }, [token]);
-
-  if (isLoading) {
-    return null; // Можно заменить на спиннер
-  }
-
-  const isAuthPage = ['/login', '/register'].includes(location.pathname);
-  return token || isAuthPage ? children : <Navigate to="/login" state={{ from: location }} />;
+  return token ? children : <Navigate to="/login" />;
 };
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Navbar /> {/* Добавляем навигацию */}
+        <Navbar />
         <div style={{ padding: '2rem' }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
