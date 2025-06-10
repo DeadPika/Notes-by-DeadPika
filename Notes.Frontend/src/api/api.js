@@ -13,10 +13,9 @@ export const register = async (username, password, email) => {
 export const login = async (email, password) => {
   try {
     const response = await api.post('/v1/User/login', { Email: email, Password: password });
-    console.log('Login response:', response);
-    console.log('Login headers:', response.headers);
+    console.log('Login raw response:', response);
     if (response.status === 200) {
-      return { success: true }; // Указываем успех, токен в куке
+      return response.data; // Возвращаем данные из тела (если есть токен)
     } else {
       throw new Error('Login failed with status: ' + response.status);
     }

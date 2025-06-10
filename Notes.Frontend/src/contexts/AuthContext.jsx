@@ -23,21 +23,22 @@ export const AuthProvider = ({ children }) => {
     try {
       const result = await login(email, password);
       console.log('Login result:', result);
-      const rawCookies = document.cookie;
-      const extractedToken = rawCookies
-        .split('; ')
-        .find(row => row.startsWith('note-cookies='))
-        ?.split('=')[1] || '';
-      console.log('Extracted token after login:', extractedToken);
-      if (result.success) {
-        if (extractedToken && extractedToken.trim() !== '') {
-          setToken(extractedToken);
-          return extractedToken;
-        } else {
-          throw new Error('Токен не доступен в куки, несмотря на успешный логин');
-        }
+      let extractedToken;
+      if (result.data && result.data.token) {
+        extractedToken = result.data.token; // Если токен в теле
+      } else {
+        const rawCookies = document.cookie;
+        extractedToken = rawCookies
+          .split('; ')
+          .find(row => row.startsWith('note-cookies='))
+          ?.split('=')[1] || '';
       }
-      throw new Error('Логин не выполнен успешно');
+      console.log('Extracted token after login:', extractedToken);
+      if (extractedToken && extractedToken.trim() !== '') {
+        setToken(extractedToken);
+        return extractedToken;
+      }
+      throw new Error('Токен не получен или пустой');
     } catch (error) {
       console.error('SignIn error:', error);
       throw error;
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const result = await register(username, password, email);
       console.log('Register result:', result);
-      return { success: true }; // Указываем успех
+      return { success: true };
     } catch (error) {
       console.error('SignUp error:', error);
       throw error;
