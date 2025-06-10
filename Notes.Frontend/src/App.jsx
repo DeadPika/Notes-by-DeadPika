@@ -8,11 +8,25 @@ import NotePage from './pages/NotePage';
 import Navbar from './components/Navbar';
 import AuthForm from './components/AuthForm';
 
-// Компонент PrivateRoute
+// Определяем PrivateRoute внутри App
 const PrivateRoute = ({ children }) => {
   const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Ждём, пока token установится
+    const timer = setTimeout(() => setIsLoading(false), 100); // Задержка для синхронизации
+    return () => clearTimeout(timer);
+  }, [token]);
+
+  if (isLoading) {
+    return null; // Или спиннер
+  }
+  // Перенаправляем на /login только если токен отсутствует и текущая страница не /login или /register
+  const isAuthPage = ['/login', '/register'].includes(location.pathname);
+  return token || isAuthPage ? children : <Navigate to="/login" state={{ from: location }} />;
 };
+
 
 function App() {
   return (

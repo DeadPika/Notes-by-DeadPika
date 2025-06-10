@@ -8,12 +8,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const rawCookies = document.cookie;
-    console.log('Raw cookies:', rawCookies);
+    console.log('Raw cookies:', rawCookies); // Лог всех куки
     const savedToken = rawCookies
       .split('; ')
       .find(row => row.startsWith('note-cookies='))
       ?.split('=')[1] || '';
-    console.log('Extracted token from cookies (initial):', savedToken);
+    console.log('Extracted token from cookies:', savedToken); // Лог токена
     if (savedToken) {
       setToken(savedToken);
     }
@@ -21,24 +21,15 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      const result = await login(email, password);
-      console.log('Login result:', result);
-      let extractedToken;
-      if (result.data && result.data.token) {
-        extractedToken = result.data.token; // Если токен в теле
-      } else {
-        const rawCookies = document.cookie;
-        extractedToken = rawCookies
-          .split('; ')
-          .find(row => row.startsWith('note-cookies='))
-          ?.split('=')[1] || '';
-      }
-      console.log('Extracted token after login:', extractedToken);
-      if (extractedToken && extractedToken.trim() !== '') {
-        setToken(extractedToken);
-        return extractedToken;
-      }
-      throw new Error('Токен не получен или пустой');
+      await login(email, password);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const rawCookies = document.cookie;
+      const extractedToken = rawCookies
+        .split('; ')
+        .find(row => row.startsWith('note-cookies='))
+        ?.split('=')[1] || '';
+      setToken(extractedToken);
+      return extractedToken;
     } catch (error) {
       console.error('SignIn error:', error);
       throw error;
@@ -47,9 +38,7 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (username, password, email) => {
     try {
-      const result = await register(username, password, email);
-      console.log('Register result:', result);
-      return { success: true };
+      await register(username, password, email);
     } catch (error) {
       console.error('SignUp error:', error);
       throw error;
