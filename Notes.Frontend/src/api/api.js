@@ -11,9 +11,18 @@ export const register = async (username, password, email) => {
 };
 
 export const login = async (email, password) => {
-  const response = await api.post('/v1/User/login', { Email: email, Password: password });
-  // console.log('Token from headers:', token);
-  return response;
+  try {
+    const response = await api.post('/v1/User/login', { Email: email, Password: password });
+    console.log('Login raw response:', response);
+    if (response.status === 200) {
+      return response.data; // Возвращаем данные из тела (если есть токен)
+    } else {
+      throw new Error('Login failed with status: ' + response.status);
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
 };
 
 export const getNotes = async (version = 'v1') => {

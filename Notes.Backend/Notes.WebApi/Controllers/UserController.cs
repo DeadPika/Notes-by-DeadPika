@@ -53,10 +53,7 @@ namespace Notes.WebApi.Controllers
                     return BadRequest(new { message = "Токен не сгенерирован" });
                 }
                 //var context = HttpContext;
-                HttpContext.Response.Cookies.Append("note-cookies", token, new CookieOptions
-                {
-                    HttpOnly = false
-                });
+                HttpContext.Response.Cookies.Append("note-cookies", token);
                 return Ok();
             }
             catch (Exception ex)
