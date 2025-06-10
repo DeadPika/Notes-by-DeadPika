@@ -20,22 +20,17 @@ const AuthForm = () => {
         if (result) {
           console.log('Login successful, token:', result);
           navigate('/notes'); // Перенаправление на страницу заметок
-        } else {
-          throw new Error('Login failed, no token returned');
         }
       } else {
         result = await signUp(username, password, email);
         if (result && result.success) {
           console.log('Registration successful');
           navigate('/login'); // Перенаправление на логин после регистрации
-        } else {
-          throw new Error('Registration failed');
         }
       }
     } catch (error) {
       console.error('Auth error:', error.message);
-      // Добавьте отображение ошибки пользователю, например:
-      // alert(error.message);
+      alert(error.message); // Отображение ошибки пользователю
     }
   };
 
