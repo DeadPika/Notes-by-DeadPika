@@ -1,33 +1,44 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const { token, logout } = useAuth();
+  const { signOut, token } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate('/login');
+  };
 
   return (
-    <nav style={{ backgroundColor: '#333', padding: '1rem' }}>
-      <ul style={{ listStyle: 'none', display: 'flex', gap: '1rem', margin: 0, padding: 0 }}>
-        {!token && (
-          <>
-            <li>
-              <Link to="/register" style={{ color: 'white', textDecoration: 'none' }}>Регистрация</Link>
-            </li>
-            <li>
-              <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>Логин</Link>
-            </li>
-          </>
-        )}
+    <nav className="bg-gray-800 p-4 text-white flex justify-between items-center">
+      <div className="text-xl font-bold">Notes App</div>
+      <div>
         {token && (
-          <li>
-            <button
-              onClick={logout}
-              style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              Выйти
-            </button>
-          </li>
+          <button
+            onClick={() => navigate('/notes')}
+            className="mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Заметки
+          </button>
         )}
-      </ul>
+        {token ? (
+          <button
+            onClick={handleSignOut}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Выход
+          </button>
+        ) : (
+          <button
+            onClick={() => navigate('/login')}
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Вход
+          </button>
+        )}
+      </div>
     </nav>
   );
 };
