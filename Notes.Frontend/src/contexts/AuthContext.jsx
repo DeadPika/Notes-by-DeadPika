@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         setToken(extractedToken);
         return extractedToken;
       }
-      throw new Error('Токен не получен или пустой');
+      // throw new Error('Токен не получен или пустой');
     } catch (error) {
       console.error('SignIn error:', error);
       throw error;
