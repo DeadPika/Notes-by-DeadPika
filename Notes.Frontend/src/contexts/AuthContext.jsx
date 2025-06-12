@@ -24,14 +24,15 @@ export const AuthProvider = ({ children }) => {
       const result = await login(email, password);
       console.log('Login result:', result);
       const rawCookies = document.cookie;
-      const extractedToken = rawCookies
+      const myToken = rawCookies
         .split('; ')
         .find(row => row.startsWith('note-cookies='))
         ?.split('=')[1] || '';
-      console.log('Extracted token after login:', extractedToken);
-      if (result.status === 200 && extractedToken && extractedToken.trim() !== '') {
-        setToken(extractedToken);
-        return extractedToken;
+      console.log('Extracted token after login:', myToken);
+      if (result.status === 200 && myToken && myToken.trim() !== '') {
+        console.log("Иф сработал, токен: ", myToken);
+        setToken(myToken);
+        return myToken;
       }
       // throw new Error('Токен не получен или пустой');
     } catch (error) {
