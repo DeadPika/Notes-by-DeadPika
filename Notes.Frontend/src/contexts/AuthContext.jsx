@@ -23,18 +23,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const result = await login(email, password);
       console.log('Login result:', result);
-      let extractedToken;
-      if (result.data && result.data.token) {
-        extractedToken = result.data.token; // Если токен в теле
-      } else {
-        const rawCookies = document.cookie;
-        extractedToken = rawCookies
-          .split('; ')
-          .find(row => row.startsWith('note-cookies='))
-          ?.split('=')[1] || '';
-      }
+      const rawCookies = document.cookie;
+      const extractedToken = rawCookies
+        .split('; ')
+        .find(row => row.startsWith('note-cookies='))
+        ?.split('=')[1] || '';
       console.log('Extracted token after login:', extractedToken);
-      if (extractedToken && extractedToken.trim() !== '') {
+      if (result.status === 200 && extractedToken && extractedToken.trim() !== '') {
         setToken(extractedToken);
         return extractedToken;
       }
