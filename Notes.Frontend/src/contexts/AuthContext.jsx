@@ -19,22 +19,24 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     const result = await login(email, password);
-    const rawCookies = document.cookie;
-    const extractedToken = rawCookies
-      .split('; ')
-      .find(row => row.startsWith('note-cookies='))
-      ?.split('=')[1] || '';
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Увеличенная задержка до 2 секунд
-    if (result.status === 200 && extractedToken && extractedToken.trim() !== '') {
-      setToken(extractedToken);
-      return extractedToken;
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка 2 секунды
+    if (result.status === 200) {
+      const rawCookies = document.cookie;
+      const extractedToken = rawCookies
+        .split('; ')
+        .find(row => row.startsWith('note-cookies='))
+        ?.split('=')[1] || '';
+      if (extractedToken) {
+        setToken(extractedToken);
+      }
+      return true; // Возвращаем успех, даже если токен не прочитан
     }
-    throw new Error('Токен не получен или пустой');
+    throw new Error('Логин не выполнен');
   };
 
   const signUp = async (username, password, email) => {
     const result = await register(username, password, email);
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Увеличенная задержка до 2 секунд
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка 2 секунды
     return { success: true };
   };
 
