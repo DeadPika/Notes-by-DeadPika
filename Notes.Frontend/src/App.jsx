@@ -11,6 +11,7 @@ import AuthForm from './components/AuthForm';
 // Компонент PrivateRoute
 const PrivateRoute = ({ children }) => {
   const { token } = useAuth();
+  // Проверяем только token, но можно добавить логику для проверки куки напрямую, если нужно
   return token ? children : <Navigate to="/login" />;
 };
 
