@@ -15,21 +15,19 @@ const Navbar = () => {
     <nav className="bg-gray-800 p-4 text-white flex justify-between items-center">
       <div className="text-xl font-bold">Notes App</div>
       <div>
+        <button
+          onClick={() => navigate('/notes')}
+          className="mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+        >
+          Заметки
+        </button>
         {token ? (
-          <>
-            <button
-              onClick={() => navigate('/notes')}
-              className="mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-            >
-              Заметки
-            </button>
-            <button
-              onClick={handleSignOut}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-            >
-              Выход
-            </button>
-          </>
+          <button
+            onClick={handleSignOut}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Выход
+          </button>
         ) : (
           <>
             <button

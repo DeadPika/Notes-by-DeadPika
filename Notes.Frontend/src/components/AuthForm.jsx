@@ -18,12 +18,12 @@ const AuthForm = () => {
       if (isLogin) {
         result = await signIn(email, password);
         if (result) {
-          navigate('/notes'); // Принудительное перенаправление на заметки
+          navigate('/notes'); // Перенаправление, работает локально
         }
       } else {
         result = await signUp(username, password, email);
         if (result && result.success) {
-          navigate('/login');
+          navigate('/login'); // Перенаправление после регистрации
         }
       }
     } catch (error) {

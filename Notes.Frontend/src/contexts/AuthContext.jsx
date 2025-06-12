@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
       if (extractedToken) {
         setToken(extractedToken);
       }
-      return true; // Возвращаем успех, даже если токен не прочитан
+      return true; // Успех при статусе 200
     }
     throw new Error('Логин не выполнен');
   };
