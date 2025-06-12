@@ -29,11 +29,13 @@ export const AuthProvider = ({ children }) => {
         .find(row => row.startsWith('note-cookies='))
         ?.split('=')[1] || '';
       console.log('Extracted token after login:', myToken);
-      if (result.status === 200 && myToken && myToken.trim() !== '') {
-        console.log("Иф сработал, токен: ", myToken);
-        setToken(myToken);
-        return myToken;
-      }
+      // if (result.status === 200 && myToken && myToken.trim() !== '') {
+      //   console.log("Иф сработал, токен: ", myToken);
+      //   setToken(myToken);
+      //   return myToken;
+      // }
+      setToken(myToken);
+      return myToken;
       // throw new Error('Токен не получен или пустой');
     } catch (error) {
       console.error('SignIn error:', error);
