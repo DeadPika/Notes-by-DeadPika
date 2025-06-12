@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       .split('; ')
       .find(row => row.startsWith('note-cookies='))
       ?.split('=')[1] || '';
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Задержка 1 секунда
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Увеличенная задержка до 2 секунд
     if (result.status === 200 && extractedToken && extractedToken.trim() !== '') {
       setToken(extractedToken);
       return extractedToken;
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (username, password, email) => {
     const result = await register(username, password, email);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Задержка 1 секунда
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Увеличенная задержка до 2 секунд
     return { success: true };
   };
 
