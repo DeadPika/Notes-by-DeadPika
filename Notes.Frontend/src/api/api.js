@@ -11,18 +11,11 @@ export const register = async (username, password, email) => {
 };
 
 export const login = async (email, password) => {
-  try {
-    const response = await api.post('/v1/User/login', { Email: email, Password: password });
-    console.log('Login raw response:', response);
-    if (response.status === 200) {
-      return response; // Возвращаем полный ответ для доступа к статусу
-    } else {
-      throw new Error('Login failed with status: ' + response.status);
-    }
-  } catch (error) {
-    console.error('Login error:', error);
-    throw error;
+  const response = await api.post('/v1/User/login', { Email: email, Password: password });
+  if (response.status === 200) {
+    return response;
   }
+  throw new Error('Login failed with status: ' + response.status);
 };
 
 export const getNotes = async (version = 'v1') => {

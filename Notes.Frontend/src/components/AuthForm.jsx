@@ -14,29 +14,20 @@ const AuthForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      let result;
       if (isLogin) {
-        if (!email || !password) {
-          alert('Заполните email и пароль');
-          return;
-        }
-        const token = await signIn(email, password); // token определяется здесь
-        console.log('Login token:', token); // Лог для отладки
-        if (token) {
+        result = await signIn(email, password);
+        if (result) {
           navigate('/notes');
-        } else {
-          alert('Токен не получен');
         }
       } else {
-        if (!username || !email || !password) {
-          alert('Заполните все поля');
-          return;
+        result = await signUp(username, password, email);
+        if (result && result.success) {
+          navigate('/login');
         }
-        await signUp(username, password, email);
-        navigate('/login');
       }
     } catch (error) {
-      console.error('Login/Register error:', error); // Лог ошибок
-      alert(error.response?.data?.message || error.message || 'Ошибка');
+      // Ошибки игнорируются по запросу
     }
   };
 

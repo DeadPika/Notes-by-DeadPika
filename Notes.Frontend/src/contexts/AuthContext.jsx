@@ -8,50 +8,34 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const rawCookies = document.cookie;
-    console.log('Raw cookies:', rawCookies);
     const savedToken = rawCookies
       .split('; ')
       .find(row => row.startsWith('note-cookies='))
       ?.split('=')[1] || '';
-    console.log('Extracted token from cookies (initial):', savedToken);
     if (savedToken) {
       setToken(savedToken);
     }
   }, []);
 
   const signIn = async (email, password) => {
-    try {
-      const result = await login(email, password);
-      console.log('Login result:', result);
-      const rawCookies = document.cookie;
-      const myToken = rawCookies
-        .split('; ')
-        .find(row => row.startsWith('note-cookies='))
-        ?.split('=')[1] || '';
-      console.log('Extracted token after login:', myToken);
-      // if (result.status === 200 && myToken && myToken.trim() !== '') {
-      //   console.log("Иф сработал, токен: ", myToken);
-      //   setToken(myToken);
-      //   return myToken;
-      // }
-      setToken(myToken);
-      return myToken;
-      // throw new Error('Токен не получен или пустой');
-    } catch (error) {
-      console.error('SignIn error:', error);
-      throw error;
+    const result = await login(email, password);
+    const rawCookies = document.cookie;
+    const extractedToken = rawCookies
+      .split('; ')
+      .find(row => row.startsWith('note-cookies='))
+      ?.split('=')[1] || '';
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Задержка 1 секунда
+    if (result.status === 200 && extractedToken && extractedToken.trim() !== '') {
+      setToken(extractedToken);
+      return extractedToken;
     }
+    throw new Error('Токен не получен или пустой');
   };
 
   const signUp = async (username, password, email) => {
-    try {
-      const result = await register(username, password, email);
-      console.log('Register result:', result);
-      return { success: true };
-    } catch (error) {
-      console.error('SignUp error:', error);
-      throw error;
-    }
+    const result = await register(username, password, email);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Задержка 1 секунда
+    return { success: true };
   };
 
   const signOut = () => {
