@@ -6,29 +6,29 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState('');
 
-  // Функция для обновления токена из куки
-  const updateTokenFromCookie = () => {
+  useEffect(() => {
     const rawCookies = document.cookie;
     const savedToken = rawCookies
       .split('; ')
       .find(row => row.startsWith('note-cookies='))
       ?.split('=')[1] || '';
-    if (savedToken && savedToken !== token) {
+    if (savedToken) {
       setToken(savedToken);
     }
-  };
-
-  useEffect(() => {
-    updateTokenFromCookie(); // Инициализация при монтировании
-    const interval = setInterval(updateTokenFromCookie, 1000); // Периодическая проверка каждую секунду
-    return () => clearInterval(interval); // Очистка интервала при размонтировании
-  }, [token]);
+  }, []);
 
   const signIn = async (email, password) => {
     const result = await login(email, password);
     await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка 2 секунды
     if (result.status === 200) {
-      updateTokenFromCookie(); // Обновляем токен после логина
+      const rawCookies = document.cookie;
+      const extractedToken = rawCookies
+        .split('; ')
+        .find(row => row.startsWith('note-cookies='))
+        ?.split('=')[1] || '';
+      if (extractedToken) {
+        setToken(extractedToken);
+      }
       return true;
     }
     throw new Error('Логин не выполнен');

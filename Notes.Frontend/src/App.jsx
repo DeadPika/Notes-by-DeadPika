@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import NotesPage from './pages/NotesPage';
@@ -8,11 +8,18 @@ import NotePage from './pages/NotePage';
 import Navbar from './components/Navbar';
 import AuthForm from './components/AuthForm';
 
-// Компонент PrivateRoute
+// Компонент PrivateRoute с проверкой куки
 const PrivateRoute = ({ children }) => {
-  const { token } = useAuth();
-  // Проверяем только token, но можно добавить логику для проверки куки напрямую, если нужно
-  return token ? children : <Navigate to="/login" />;
+  const checkAuth = () => {
+    const rawCookies = document.cookie;
+    const cookieToken = rawCookies
+      .split('; ')
+      .find(row => row.startsWith('note-cookies='))
+      ?.split('=')[1];
+    return !!cookieToken; // Возвращает true, если куки с токеном существует
+  };
+
+  return checkAuth() ? children : <Navigate to="/login" />;
 };
 
 function App() {
