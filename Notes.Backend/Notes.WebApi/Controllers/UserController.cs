@@ -60,7 +60,8 @@ namespace Notes.WebApi.Controllers
                     SameSite = SameSiteMode.None, // Для кросс-доменных запросов
                     Secure = true, // Требуется для SameSite=None
                     Expires = DateTimeOffset.UtcNow.AddDays(7),
-                    Path = "/"
+                    Path = "/",
+                    Domain = "https://notes-deadpikas-projects.vercel.app"
                 });
 
                 return Ok(new { message = "Успешный вход" });
