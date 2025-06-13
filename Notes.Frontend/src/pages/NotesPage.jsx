@@ -10,10 +10,9 @@ const NotesPage = () => {
     const fetchNotes = async () => {
       try {
         const data = await getNotes();
-        console.log('Fetched notes:', data); // Отладка
         setNotes(data);
       } catch (error) {
-        console.error('Error fetching notes:', error); // Отладка
+        console.error('Error fetching notes:', error);
       }
     };
     fetchNotes();
@@ -21,7 +20,7 @@ const NotesPage = () => {
 
   return (
     <div>
-      <h1>Notes Page</h1>
+      <h1>Страница заметок.</h1>
       {notes.length > 0 ? (
         <ul>
           {notes.map(note => (

@@ -66,7 +66,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", builder =>
     {
-        builder.WithOrigins("https://notes-deadpika.netlify.app")
+        builder.WithOrigins("https://notes-deadpikas-projects.vercel.app/")
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials();
