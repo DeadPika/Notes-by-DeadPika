@@ -31,9 +31,11 @@ export const getNoteDetails = async (id, version = 'v1') => {
   return response.data;
 };
 
-export const createNote = async (note, version = 'v1') => {
-  const response = await api.post(`/${version}/note/Create`, note);
-  return response.data;
+export const createNote = async (noteData) => {
+  const response = await api.post('/v1/note/Create', noteData, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+  return response;
 };
 
 export const updateNote = async (id, note, version = 'v1') => {
