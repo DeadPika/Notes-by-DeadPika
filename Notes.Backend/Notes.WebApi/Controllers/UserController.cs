@@ -53,16 +53,17 @@ namespace Notes.WebApi.Controllers
                     return BadRequest(new { message = "Токен не сгенерирован" });
                 }
 
-                HttpContext.Response.Cookies.Append("note-cookies", token, new CookieOptions
+                // Устанавливаем куки с правильными атрибутами
+                Response.Cookies.Append("note-cookies", token, new CookieOptions
                 {
-                    HttpOnly = false,
-                    Path = "/",
-                    SameSite = SameSiteMode.None,
-                    Secure = true,
-                    Expires = DateTimeOffset.UtcNow.AddDays(7)
+                    HttpOnly = false, // Делаем доступными для JavaScript
+                    SameSite = SameSiteMode.None, // Для кросс-доменных запросов
+                    Secure = true, // Требуется для SameSite=None
+                    Expires = DateTimeOffset.UtcNow.AddDays(7),
+                    Path = "/"
                 });
 
-                return Ok();
+                return Ok(new { message = "Успешный вход" });
             }
             catch (Exception ex)
             {

@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   const signIn = async (email, password) => {
     const result = await login(email, password);
     await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка 2 секунды
+    console.log('Cookies(signIn befor):', document.cookie);
     if (result.status === 200) {
       const rawCookies = document.cookie;
       const extractedToken = rawCookies
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }) => {
       if (extractedToken) {
         setToken(extractedToken);
       }
+      console.log('Cookies(signIn after):', document.cookie);
       return true;
     }
     throw new Error('Логин не выполнен');

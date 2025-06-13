@@ -11,6 +11,7 @@ import AuthForm from './components/AuthForm';
 // Компонент PrivateRoute
 const PrivateRoute = ({ children }) => {
   const { token } = useAuth();
+  console.log('Cookies(PrivateRoute):', document.cookie);
   return token ? children : <Navigate to="/login" />;
 };
 
