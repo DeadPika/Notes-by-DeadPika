@@ -1,55 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { getNotes } from '../api/api';
+import { useNavigate } from 'react-router-dom';
+import NoteList from '../components/NoteList';
+import { getNotes, deleteNote } from '../api/api';
 
 const NotesPage = () => {
-  const { token } = useAuth();
   const [notes, setNotes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchNotes = async () => {
-      if (!token) {
-        setError('Нет токена авторизации');
-        setLoading(false);
-        return;
-      }
-      try {
-        const data = await getNotes();
-        console.log('Fetched notes:', data); // Для отладки
-        if (data && Array.isArray(data.notes)) {
-          setNotes(data.notes); // Извлекаем массив из ключа 'notes'
-        } else {
-          setNotes([]); // Если 'notes' нет или не массив
-          setError('Данные не являются списком заметок');
-        }
-      } catch (error) {
-        console.error('Ошибка загрузки заметок:', error);
-        setError('Не удалось загрузить заметки');
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!token) {
+      navigate('/login');
+      return;
+    }
     fetchNotes();
-  }, [token]);
+  }, [token, navigate]);
 
-  if (loading) return <div>Загрузка...</div>;
-  if (error) return <div>Ошибка: {error}</div>;
+  const fetchNotes = async () => {
+    const data = await getNotes('v1');
+    setNotes(data.notes || []);
+  };
+
+  const handleDelete = async (id) => {
+    await deleteNote(id, 'v1');
+    fetchNotes();
+  };
 
   return (
-    <div>
-      <h1>Ваши заметки</h1>
-      {notes.length === 0 ? (
-        <p>У вас пока нет заметок.</p>
-      ) : (
-        <ul>
-          {notes.map((note) => (
-            <li key={note.id}>{note.title || note.id}</li>
-          ))}
-        </ul>
-      )}
-      <button onClick={handleCreateNote}>Создать заметку</button>
+    <div className="container mx-auto p-4">
+      <NoteList notes={notes} onDelete={handleDelete} />
     </div>
   );
 };
