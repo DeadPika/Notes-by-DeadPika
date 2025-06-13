@@ -8,20 +8,6 @@ import NotePage from './pages/NotePage';
 import Navbar from './components/Navbar';
 import AuthForm from './components/AuthForm';
 
-// Компонент PrivateRoute с проверкой куки
-const PrivateRoute = ({ children }) => {
-  const checkAuth = () => {
-    const rawCookies = document.cookie;
-    const cookieToken = rawCookies
-      .split('; ')
-      .find(row => row.startsWith('note-cookies='))
-      ?.split('=')[1];
-    return !!cookieToken; // Возвращает true, если куки с токеном существует
-  };
-
-  return checkAuth() ? children : <Navigate to="/login" />;
-};
-
 function App() {
   return (
     <AuthProvider>
@@ -31,20 +17,15 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route
-              path="/*"
-              element={
-                <PrivateRoute>
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/notes" />} />
-                    <Route path="/notes" element={<NotesPage />} />
-                    <Route path="/notes/:id" element={<NotePage />} />
-                    <Route path="/notes/create" element={<NotePage />} />
-                    <Route path="/notes/edit/:id" element={<NotePage />} />
-                  </Routes>
-                </PrivateRoute>
-              }
-            />
+            <Route path="/*" element={
+              <Routes>
+                <Route path="/" element={<Navigate to="/notes" />} />
+                <Route path="/notes" element={<NotesPage />} />
+                <Route path="/notes/:id" element={<NotePage />} />
+                <Route path="/notes/create" element={<NotePage />} />
+                <Route path="/notes/edit/:id" element={<NotePage />} />
+              </Routes>
+            } />
           </Routes>
         </div>
       </Router>
