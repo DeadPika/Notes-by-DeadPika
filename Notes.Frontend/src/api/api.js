@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'https://notes-4g7h.onrender.com/api',
-  withCredentials: true,
+  withCredentials: true, // Для поддержки кросс-доменных куки (хотя теперь не нужно для токена)
 });
 
 export const register = async (username, password, email) => {
@@ -19,10 +19,13 @@ export const login = async (email, password) => {
 };
 
 export const getNotes = async (version = 'v1') => {
-  const response = await api.get(`/${version}/note/GetAll`);
+  const response = await api.get(`/${version}/note/GetAll`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } // Добавляем токен в заголовок
+  });
   return response.data;
 };
 
+// Остальные методы (getNoteDetails, createNote и т.д.) обновите аналогично
 export const getNoteDetails = async (id, version = 'v1') => {
   const response = await api.get(`/${version}/note/Get/${id}`);
   return response.data;

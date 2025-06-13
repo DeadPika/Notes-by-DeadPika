@@ -1,39 +1,32 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { login, register } from '../api/api';
+import { login } from '../api/api';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState('');
 
+  // Загружаем токен из localStorage при монтировании
   useEffect(() => {
-    const rawCookies = document.cookie;
-    const savedToken = rawCookies
-      .split('; ')
-      .find(row => row.startsWith('note-cookies='))
-      ?.split('=')[1] || '';
+    const savedToken = localStorage.getItem('token');
     if (savedToken) {
       setToken(savedToken);
     }
   }, []);
 
   const signIn = async (email, password) => {
-    const result = await login(email, password);
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка 2 секунды
-    console.log('Cookies(signIn befor):', document.cookie);
-    if (result.status === 200) {
-      const rawCookies = document.cookie;
-      const extractedToken = rawCookies
-        .split('; ')
-        .find(row => row.startsWith('note-cookies='))
-        ?.split('=')[1] || '';
-      if (extractedToken) {
-        setToken(extractedToken);
+    try {
+      const response = await login(email, password);
+      if (response.status === 200) {
+        const { token } = response.data;
+        localStorage.setItem('token', token); // Сохраняем в localStorage
+        setToken(token); // Обновляем состояние
+        return true;
       }
-      console.log('Cookies(signIn after):', document.cookie);
-      return true;
+      throw new Error('Логин не выполнен');
+    } catch (error) {
+      throw new Error('Ошибка входа: ' + (error.message || 'Неизвестная ошибка'));
     }
-    throw new Error('Логин не выполнен');
   };
 
   const signUp = async (username, password, email) => {
@@ -44,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = () => {
     setToken('');
-    document.cookie = 'note-cookies=; Max-Age=0; path=/';
+    localStorage.removeItem('token');
   };
 
   return (

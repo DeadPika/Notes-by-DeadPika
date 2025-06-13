@@ -63,7 +63,7 @@ namespace Notes.WebApi.Controllers
                     Path = "/"
                 });
 
-                return Ok(new { message = "Успешный вход" });
+                return Ok(new { token });
             }
             catch (Exception ex)
             {
