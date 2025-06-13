@@ -16,10 +16,10 @@ const NotePage = () => {
   const isCreate = location.pathname.includes('create');
 
   useEffect(() => {
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    // if (!token) {
+    //   navigate('/login');
+    //   return;
+    // }
     if (id && !isCreate) {
       fetchNoteDetails();
     }

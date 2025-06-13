@@ -1,35 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NoteList from '../components/NoteList';
-import { getNotes, deleteNote } from '../api/api';
+import { getNotes } from '../api/api';
 
 const NotesPage = () => {
-  const [notes, setNotes] = useState([]);
-  const { token } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    const fetchNotes = async () => {
+      try {
+        const notes = await getNotes(); // Без проверки авторизации
+        console.log(notes); // Для отладки
+      } catch (error) {
+        console.log('Error fetching notes:', error); // Логи для диагностики
+        // Уберите перенаправление или сделайте его опциональным
+      }
+    };
     fetchNotes();
-  }, [token, navigate]);
-
-  const fetchNotes = async () => {
-    const data = await getNotes('v1');
-    setNotes(data.notes || []);
-  };
-
-  const handleDelete = async (id) => {
-    await deleteNote(id, 'v1');
-    fetchNotes();
-  };
+  }, []);
 
   return (
-    <div className="container mx-auto p-4">
-      <NoteList notes={notes} onDelete={handleDelete} />
+    <div>
+      <h1>Notes Page</h1>
+      {/* Здесь рендеринг заметок */}
     </div>
   );
 };

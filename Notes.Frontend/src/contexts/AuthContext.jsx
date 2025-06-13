@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = async (username, password, email) => {
     const result = await register(username, password, email);
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка 2 секунды
+    // await new Promise(resolve => setTimeout(resolve, 2000)); // Задержка 2 секунды
     return { success: true };
   };
 
