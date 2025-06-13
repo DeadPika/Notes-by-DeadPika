@@ -18,10 +18,10 @@ const NotesPage = () => {
       try {
         const data = await getNotes();
         console.log('Fetched notes:', data); // Для отладки
-        if (Array.isArray(data)) {
-          setNotes(data);
+        if (data && Array.isArray(data.notes)) {
+          setNotes(data.notes); // Извлекаем массив из ключа 'notes'
         } else {
-          setNotes([]); // Если данные не массив, устанавливаем пустой массив
+          setNotes([]); // Если 'notes' нет или не массив
           setError('Данные не являются списком заметок');
         }
       } catch (error) {
