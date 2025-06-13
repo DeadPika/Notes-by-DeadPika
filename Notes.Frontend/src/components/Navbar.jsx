@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-800 p-4 text-white flex justify-between items-center">
-      <div className="text-xl font-bold">Notes App</div>
+      <div className="text-xl font-bold">Заметки от DeadPika.</div>
       <div>
         <button
           onClick={() => navigate('/notes')}

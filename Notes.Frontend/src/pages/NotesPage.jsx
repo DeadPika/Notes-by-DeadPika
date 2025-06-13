@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getNotes } from '../api/api';
 
 const NotesPage = () => {
+  const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const notes = await getNotes(); // Без проверки авторизации
-        console.log(notes); // Для отладки
+        const data = await getNotes();
+        console.log('Fetched notes:', data); // Отладка
+        setNotes(data);
       } catch (error) {
-        console.log('Error fetching notes:', error); // Логи для диагностики
-        // Уберите перенаправление или сделайте его опциональным
+        console.error('Error fetching notes:', error); // Отладка
       }
     };
     fetchNotes();
@@ -21,7 +22,15 @@ const NotesPage = () => {
   return (
     <div>
       <h1>Notes Page</h1>
-      {/* Здесь рендеринг заметок */}
+      {notes.length > 0 ? (
+        <ul>
+          {notes.map(note => (
+            <li key={note.id}>{note.title || 'Без заголовка'}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>Заметки не найдены или ещё загружаются...</p>
+      )}
     </div>
   );
 };
