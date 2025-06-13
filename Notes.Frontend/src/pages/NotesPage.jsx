@@ -1,39 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { getNotes, createNote } from '../api/api';
+import { getNotes } from '../api/api';
 
 const NotesPage = () => {
   const { token } = useAuth();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchNotes = async () => {
-      if (token) {
-        try {
-          const data = await getNotes();
+      if (!token) {
+        setError('Нет токена авторизации');
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await getNotes();
+        console.log('Fetched notes:', data); // Для отладки
+        if (Array.isArray(data)) {
           setNotes(data);
-        } catch (error) {
-          console.error('Ошибка загрузки заметок:', error);
-        } finally {
-          setLoading(false);
+        } else {
+          setNotes([]); // Если данные не массив, устанавливаем пустой массив
+          setError('Данные не являются списком заметок');
         }
+      } catch (error) {
+        console.error('Ошибка загрузки заметок:', error);
+        setError('Не удалось загрузить заметки');
+      } finally {
+        setLoading(false);
       }
     };
     fetchNotes();
   }, [token]);
 
-  const handleCreateNote = async () => {
-    try {
-      const newNote = { title: 'Новая заметка', content: '' }; // Пример данных
-      const response = await createNote(newNote);
-      setNotes([...notes, response.data]); // Обновляем список заметок
-    } catch (error) {
-      console.error('Ошибка создания заметки:', error);
-    }
-  };
-
   if (loading) return <div>Загрузка...</div>;
+  if (error) return <div>Ошибка: {error}</div>;
+
   return (
     <div>
       <h1>Ваши заметки</h1>

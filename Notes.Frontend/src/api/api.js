@@ -19,10 +19,15 @@ export const login = async (email, password) => {
 };
 
 export const getNotes = async (version = 'v1') => {
-  const response = await api.get(`/${version}/note/GetAll`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } // Добавляем токен в заголовок
-  });
-  return response.data;
+  try {
+    const response = await api.get(`/${version}/note/GetAll`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    return response.data; // Убедитесь, что data — это массив
+  } catch (error) {
+    console.error('API Error:', error.response?.data || error.message);
+    throw error;
+  }
 };
 
 // Остальные методы (getNoteDetails, createNote и т.д.) обновите аналогично
