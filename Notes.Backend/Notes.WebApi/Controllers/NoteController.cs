@@ -6,7 +6,6 @@ using Notes.Persistence.Repositories.Notes.Commands.CreateNote;
 using Notes.Persistence.Repositories.Notes.Commands.DeleteNote;
 using Notes.Persistence.Repositories.Notes.Commands.UpdateNote;
 using Notes.WebApi.Contracts;
-using Microsoft.AspNetCore.Authorization;
 using Notes.WebApi.Attributes;
 using Notes.Domain.Enums;
 using Asp.Versioning;

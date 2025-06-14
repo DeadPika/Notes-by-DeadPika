@@ -1,0 +1,79 @@
+2025-06-14 20:48:38.066 +05:00 [INF] Executed DbCommand (123ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END
+FROM pg_class AS cls
+JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+WHERE
+        cls.relkind IN ('r', 'v', 'm', 'f', 'p') AND
+        ns.nspname NOT IN ('pg_catalog', 'information_schema') AND
+        -- Exclude tables which are members of PG extensions
+        NOT EXISTS (
+            SELECT 1 FROM pg_depend WHERE
+                classid=(
+                    SELECT cls.oid
+                    FROM pg_class AS cls
+                             JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+                    WHERE relname='pg_class' AND ns.nspname='pg_catalog'
+                ) AND
+                objid=cls.oid AND
+                deptype IN ('e', 'x')
+        )
+2025-06-14 20:49:11.766 +05:00 [INF] Executed DbCommand (123ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END
+FROM pg_class AS cls
+JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+WHERE
+        cls.relkind IN ('r', 'v', 'm', 'f', 'p') AND
+        ns.nspname NOT IN ('pg_catalog', 'information_schema') AND
+        -- Exclude tables which are members of PG extensions
+        NOT EXISTS (
+            SELECT 1 FROM pg_depend WHERE
+                classid=(
+                    SELECT cls.oid
+                    FROM pg_class AS cls
+                             JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+                    WHERE relname='pg_class' AND ns.nspname='pg_catalog'
+                ) AND
+                objid=cls.oid AND
+                deptype IN ('e', 'x')
+        )
+2025-06-14 20:49:11.959 +05:00 [INF] User profile is available. Using 'C:\Users\xleb3\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-14 20:49:12.109 +05:00 [INF] Now listening on: http://localhost:5269
+2025-06-14 20:49:12.227 +05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-14 20:49:12.228 +05:00 [INF] Hosting environment: Development
+2025-06-14 20:49:12.228 +05:00 [INF] Content root path: D:\Projects\Notes\Notes.Backend\Notes.WebApi
+2025-06-14 20:49:14.618 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/_vs/browserLink - null null
+2025-06-14 20:49:14.618 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-14 20:49:14.636 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 24.6133ms
+2025-06-14 20:49:14.676 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/_vs/browserLink - 200 null text/javascript; charset=UTF-8 65.4042ms
+2025-06-14 20:49:14.750 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/swagger/v1/swagger.json - null null
+2025-06-14 20:49:14.769 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 19.2312ms
+2025-06-14 20:49:51.447 +05:00 [INF] Request starting HTTP/1.1 POST http://localhost:5269/api/v1/User/register - application/json 75
+2025-06-14 20:49:51.499 +05:00 [WRN] Failed to determine the https port for redirect.
+2025-06-14 20:49:51.500 +05:00 [INF] CORS policy execution failed.
+2025-06-14 20:49:51.500 +05:00 [INF] Request origin http://localhost:5269 does not have permission to access the resource.
+2025-06-14 20:49:51.569 +05:00 [INF] Executing endpoint 'Notes.WebApi.Controllers.UserController.Register (Notes.WebApi)'
+2025-06-14 20:49:51.591 +05:00 [INF] Route matched with {action = "Register", controller = "User"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Register(Notes.WebApi.Contracts.RegisterUserRequest, Notes.Application.Interfaces.IUserService) on controller Notes.WebApi.Controllers.UserController (Notes.WebApi).
+2025-06-14 20:49:52.060 +05:00 [INF] Executed DbCommand (92ms) [Parameters=[@__propertyValue_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Users" AS u
+    WHERE lower(u."UserName") = @__propertyValue_0)
+2025-06-14 20:49:52.157 +05:00 [INF] Executed DbCommand (82ms) [Parameters=[@__propertyValue_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Users" AS u
+    WHERE lower(u."Email") = @__propertyValue_0)
+2025-06-14 20:49:52.799 +05:00 [INF] Executed DbCommand (88ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."Name"
+FROM "Roles" AS r
+WHERE r."Id" = 1
+LIMIT 2
+2025-06-14 20:49:53.053 +05:00 [INF] Executed DbCommand (96ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?', @p2='?', @p3='?', @p4='?' (DbType = Int32), @p5='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Users" ("Id", "Email", "HashPassword", "UserName")
+VALUES (@p0, @p1, @p2, @p3);
+INSERT INTO "UserRoleEntity" ("RoleId", "UserId")
+VALUES (@p4, @p5);
+2025-06-14 20:49:53.158 +05:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2025-06-14 20:49:53.162 +05:00 [INF] Executed action Notes.WebApi.Controllers.UserController.Register (Notes.WebApi) in 1568.2574ms
+2025-06-14 20:49:53.162 +05:00 [INF] Executed endpoint 'Notes.WebApi.Controllers.UserController.Register (Notes.WebApi)'
+2025-06-14 20:49:53.169 +05:00 [INF] Request finished HTTP/1.1 POST http://localhost:5269/api/v1/User/register - 200 0 null 1722.0252ms

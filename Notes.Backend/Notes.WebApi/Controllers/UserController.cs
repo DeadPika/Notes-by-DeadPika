@@ -1,9 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Notes.Application.Interfaces;
-using Notes.Application.Services;
 using Notes.WebApi.Contracts;
-using Notes.WebApi.Models;
 
 namespace Notes.WebApi.Controllers
 {

@@ -3,12 +3,9 @@ using Notes.Application;
 using Notes.Application.Common.Mapping;
 using Notes.Infrastructure;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
 using Notes.WebApi.Middleware;
 using Notes.WebApi.Extensions;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.OpenApi.Models;
 using Notes.Persistence.Interfaces;
 using Asp.Versioning;
 using Microsoft.Extensions.Options;
@@ -16,8 +13,17 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Notes.WebApi;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Mvc;
+using Notes.Application.Interfaces;
+using Notes.WebApi.Services;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
+
+Log.Logger = new LoggerConfiguration().MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .WriteTo.File("NotesWebApiLog-.txt", rollingInterval: RollingInterval.Day).CreateLogger();
 
 // Настройка сервисов (аналог ConfigureServices из Startup)
 builder.Services.AddAutoMapper(config =>
@@ -50,11 +56,6 @@ builder.Services.AddControllers();
 
 builder.Services.AddApiAuthentication(builder.Configuration);
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-//builder.Services.AddDbContext<NotesDbContext>(options =>
-//    options.UseNpgsql(connectionString));
-
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -73,30 +74,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAll", policy =>
-//    {
-//        policy.AllowAnyHeader();
-//        policy.AllowAnyMethod();
-//        policy.AllowAnyOrigin();
-//    });
-//});
-
 builder.Services.AddEndpointsApiExplorer();
-
-//builder.Services.AddSwaggerGen(config =>
-//{
-//    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-//    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-//    config.IncludeXmlComments(xmlPath);
-//    config.SwaggerDoc("v1", new OpenApiInfo
-//    {
-//        Title = "Notes.WebApi",
-//        Version = "v1"
-//    });
-//});
-
 
 // Регистрируем Asp.Versioning.Mvc
 builder.Services.AddApiVersioning(options =>
@@ -112,6 +90,8 @@ builder.Services.AddApiVersioning(options =>
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -126,9 +106,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception exception)
     {
-        // Здесь можно добавить логирование ошибки, например:
-        var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-        logger.LogError(exception, "An error occurred while initializing the database.");
+        Log.Fatal(exception, "An Error occurred while app initialization");
     }
 }
 
@@ -154,23 +132,9 @@ if (app.Environment.IsDevelopment())
 //Вызвал Middleware, который обрабатывает исключения.
 app.UseCustomExceptionHandler();
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Styles")),
-    RequestPath = "/styles"
-});
-
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
-//app.UseCors("AllowAll");
-
-//app.UseCookiePolicy(new CookiePolicyOptions
-//{
-//    MinimumSameSitePolicy = SameSiteMode.Strict,
-//    HttpOnly = HttpOnlyPolicy.Always,
-//    Secure = CookieSecurePolicy.Always
-//});
 
 app.UseAuthentication();    
 app.UseAuthorization();

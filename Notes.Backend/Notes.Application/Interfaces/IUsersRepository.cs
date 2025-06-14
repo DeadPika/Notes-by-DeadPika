@@ -1,4 +1,5 @@
-﻿using Notes.Domain.Enums;
+﻿using Microsoft.EntityFrameworkCore;
+using Notes.Domain.Enums;
 using Notes.Domain.Models;
 
 namespace Notes.Application.Interfaces
