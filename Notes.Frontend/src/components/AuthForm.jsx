@@ -6,6 +6,7 @@ const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,6 +14,8 @@ const AuthForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    console.log('Submitting:', { email, password, username, isLogin });
     try {
       let result;
       if (isLogin) {
@@ -27,7 +30,8 @@ const AuthForm = () => {
         }
       }
     } catch (error) {
-      // Ошибки игнорируются
+      console.error('Auth error:', error.response?.data || error.message);
+      setError(error.response?.data?.message || error.message || 'Произошла ошибка');
     }
   };
 
@@ -65,6 +69,7 @@ const AuthForm = () => {
           placeholder="Введите пароль"
         />
       </div>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       <button
         type="submit"
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
