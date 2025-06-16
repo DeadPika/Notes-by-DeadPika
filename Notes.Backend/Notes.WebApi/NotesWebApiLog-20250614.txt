@@ -77,3 +77,47 @@ VALUES (@p4, @p5);
 2025-06-14 20:49:53.162 +05:00 [INF] Executed action Notes.WebApi.Controllers.UserController.Register (Notes.WebApi) in 1568.2574ms
 2025-06-14 20:49:53.162 +05:00 [INF] Executed endpoint 'Notes.WebApi.Controllers.UserController.Register (Notes.WebApi)'
 2025-06-14 20:49:53.169 +05:00 [INF] Request finished HTTP/1.1 POST http://localhost:5269/api/v1/User/register - 200 0 null 1722.0252ms
+2025-06-14 23:29:26.303 +05:00 [INF] Executed DbCommand (227ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE WHEN COUNT(*) = 0 THEN FALSE ELSE TRUE END
+FROM pg_class AS cls
+JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+WHERE
+        cls.relkind IN ('r', 'v', 'm', 'f', 'p') AND
+        ns.nspname NOT IN ('pg_catalog', 'information_schema') AND
+        -- Exclude tables which are members of PG extensions
+        NOT EXISTS (
+            SELECT 1 FROM pg_depend WHERE
+                classid=(
+                    SELECT cls.oid
+                    FROM pg_class AS cls
+                             JOIN pg_namespace AS ns ON ns.oid = cls.relnamespace
+                    WHERE relname='pg_class' AND ns.nspname='pg_catalog'
+                ) AND
+                objid=cls.oid AND
+                deptype IN ('e', 'x')
+        )
+2025-06-14 23:29:27.082 +05:00 [INF] User profile is available. Using 'C:\Users\xleb3\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-06-14 23:29:27.353 +05:00 [INF] Now listening on: http://localhost:5269
+2025-06-14 23:29:27.726 +05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-06-14 23:29:27.726 +05:00 [INF] Hosting environment: Development
+2025-06-14 23:29:27.726 +05:00 [INF] Content root path: D:\Projects\Notes\Notes.Backend\Notes.WebApi
+2025-06-14 23:29:28.904 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/ - null null
+2025-06-14 23:29:29.214 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/ - 301 0 null 320.0573ms
+2025-06-14 23:29:29.261 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/index.html - null null
+2025-06-14 23:29:29.361 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/index.html - 200 null text/html;charset=utf-8 100.988ms
+2025-06-14 23:29:29.375 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/index.css - null null
+2025-06-14 23:29:29.375 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/swagger-ui.css - null null
+2025-06-14 23:29:29.486 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/swagger-ui-standalone-preset.js - null null
+2025-06-14 23:29:29.552 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/swagger-ui-bundle.js - null null
+2025-06-14 23:29:29.573 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/index.js - null null
+2025-06-14 23:29:29.573 +05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5269/_framework/aspnetcore-browser-refresh.js - null null
+2025-06-14 23:29:29.624 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/index.js - 200 null application/javascript;charset=utf-8 4.5217ms
+2025-06-14 23:29:29.624 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/_framework/aspnetcore-browser-refresh.js - 200 13776 application/javascript; charset=utf-8 50.6568ms
+2025-06-14 23:29:29.641 +05:00 [INF] Sending file. Request path: '/index.css'. Physical path: 'N/A'
+2025-06-14 23:29:29.641 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/index.css - 200 202 text/css 266.4911ms
+2025-06-14 23:29:29.648 +05:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2025-06-14 23:29:29.648 +05:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2025-06-14 23:29:29.650 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/swagger-ui-standalone-preset.js - 200 229223 text/javascript 177.9541ms
+2025-06-14 23:29:29.650 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/swagger-ui.css - 200 154949 text/css 275.125ms
+2025-06-14 23:29:29.674 +05:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2025-06-14 23:29:29.674 +05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5269/swagger-ui-bundle.js - 200 1466908 text/javascript 122.633ms
